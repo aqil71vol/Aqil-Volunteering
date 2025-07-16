@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- <html lang="en" dir="ltr"> -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aqil Volunteering</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Font Awesome for social icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  <header class="header">
+    <div class="header-flex container">
+      <h1 data-translate="welcome">Welcome to Aqil Volunteering</h1>
+      <select id="language-select" class="language-select" title="Change Language">
+        <option value="en">English</option>
+        <option value="ar">العربية</option>
+      </select>
+    </div>
+  </header>
+
+  <main class="container main-content">
+
+      <!-- الكرة -->
+  <div id="ball" class="ball" data-translate="ball">Hold me</div>
+
+  <!-- صوت -->
+  <audio id="kickSound" src="assets/sounds/rolling_ball_simple.mp3" preload="auto"></audio>
+  
+  <!-- صورة مستطيلة -->
+  <div class="banner-container">
+    <img src="assets/images/volunteer-day-banner-collection-free-vector.jpg" alt="صورة ترويجية" class="banner-image">
+  </div>
+
+  <!-- صورة خلفية -->
+  <div class="art-frame" style="background-image: url('assets/images/world-humanitarian-day-with-global-celebration-of-helping-people-work-together-charity-donation-and-volunteer-in-flat-cartoon-illustration-vector.jpg');">
+    <div class="overlay-text" data-translate="background">Volunteering Day</div>
+  </div>
+
+
+    <!-- فقرات ترحيبية قابلة للطي -->
+    <section class="collapsible-section">
+      <button class="collapsible" aria-expanded="false">
+        <span data-translate="p1_title">🌟 What is Aqil Volunteering?</span>
+        <span class="arrow">&#9656;</span>
+      </button>
+      <div class="content">
+        <p data-translate="p1">
+          Aqil Volunteering is a dynamic social platform connecting volunteers and organizations worldwide.
+        </p>
+      </div>
+    </section>
+
+    <section class="collapsible-section">
+      <button class="collapsible" aria-expanded="false">
+        <span data-translate="p2_title">🚀 Why Join Us?</span>
+        <span class="arrow">&#9656;</span>
+      </button>
+      <div class="content">
+        <p data-translate="p2">
+          Engage with meaningful projects, grow your skills, and make a positive impact.
+        </p>
+      </div>
+    </section>
+
+    <div class="card">
+      <h3 data-translate="welcome">Welcome, Aqil!</h3>
+      <p data-translate="info">Here you can manage your volunteering projects, view applications, and more.</p>
+    </div>
+
+    <div class="card">
+      <h3 data-translate="projects">Your Projects</h3>
+      <p data-translate="projectsInfo">No projects created yet. Click to add a new one.</p>
+    </div>
+
+    <div class="card">
+      <h3 data-translate="applications">Volunteer Applications</h3>
+      <p data-translate="applicationsInfo">No applications at the moment.</p>
+    </div>
+
+    <!-- أزرار الانتقال -->
+    <section class="actions">
+      <a href="login.html" class="btn" data-translate="login">Login</a>
+      <a href="register.html" class="btn" data-translate="register">Register</a>
+    </section>
+
+  </main>
+  
+  <!-- الفوتر -->
+  <footer class="footer">
+    <div class="container social">
+      <a id="fb-link" target="_blank" aria-label="Facebook" title="Facebook">
+        <i class="fab fa-facebook fa-xl"></i>
+      </a>
+      <a id="insta-link" target="_blank" aria-label="Instagram" title="Instagram">
+        <i class="fab fa-instagram fa-xl"></i>
+      </a>
+      <a id="wa-link" target="_blank" aria-label="WhatsApp" title="WhatsApp">
+        <i class="fab fa-whatsapp fa-xl"></i>
+      </a>
+    </div>
+    <p id="copyright" class="copyright" data-translate="copyright">© 2025 Aqil. All rights reserved.</p>
+  </footer>
+  
+<script src="js/translation.js" defer></script>
+<script src="js/main.js" defer></script>
+<script src="js/ball.js" defer></script>
+</body>
+</html>
+

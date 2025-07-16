@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-translate="dashboard">Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Font Awesome for social icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+  <header class="header">
+    <div class="header-flex container">
+      <h1 data-translate="dashboard">Dashboard</h1>
+      <select id="language-select" class="language-select">
+        <option value="en">English</option>
+        <option value="ar">العربية</option>
+      </select>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="card">
+      <h3 data-translate="welcome">Welcome, Aqil!</h3>
+      <p data-translate="info">Here you can manage your volunteering projects, view applications, and more.</p>
+    </div>
+
+    <div class="card">
+      <h3 data-translate="projects">Your Projects</h3>
+      <p data-translate="projectsInfo">No projects created yet. Click to add a new one.</p>
+    </div>
+
+    <div class="card">
+      <h3 data-translate="applications">Volunteer Applications</h3>
+      <p data-translate="applicationsInfo">No applications at the moment.</p>
+    </div>
+
+    <!-- صور تعريفية -->
+    <section class="image-section">
+      <img src="assets/images/v.png" alt="Volunteering" class="main-image" />
+      <img src="assets/images/v0.png" alt="Volunteering_1" class="main-image" />
+      <img src="assets/images/v_2025.jpg" alt="Volunteering_2" class="main-image" />
+    </section>
+
+    <!-- فيديو تعريفي -->
+    <section class="video-section">
+      <video controls class="main-video" preload="metadata">
+        <source src="assets/videos/OBS.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </section>
+
+       <!-- أزرار الانتقال الى صفحات اخرى -->
+    <section class="actions">
+      <a href="pages/thanks.html" class="btn" data-translate="thanks" target="_blank">Thanks</a>
+      <a href="pages/lecture.html" class="btn" data-translate="lecture" target="_blank">Lecture</a>
+      <a href="pages/training.html" class="btn" data-translate="training" target="_blank">Training</a>
+    </section>
+
+       <!-- أزرار التسجيل -->
+    <section class="actions">
+      <a href="pages/data_entry.html" class="btn" data-translate="data_entry" target="_blank">Data Entry</a>
+    </section>
+
+  </main>
+
+  <!-- الفوتر -->
+  <footer class="footer">
+    <div class="container social">
+      <a id="fb-link" target="_blank" aria-label="Facebook" title="Facebook">
+        <i class="fab fa-facebook fa-xl"></i>
+      </a>
+      <a id="insta-link" target="_blank" aria-label="Instagram" title="Instagram">
+        <i class="fab fa-instagram fa-xl"></i>
+      </a>
+      <a id="wa-link" target="_blank" aria-label="WhatsApp" title="WhatsApp">
+        <i class="fab fa-whatsapp fa-xl"></i>
+      </a>
+    </div>
+    <p id="copyright" class="copyright" data-translate="copyright">© 2025 Aqil. All rights reserved.</p>
+  </footer>
+
+  <script src="js/translation.js" defer></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

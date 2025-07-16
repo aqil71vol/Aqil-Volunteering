@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-translate="register">Register</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="container">
+
+    <!-- Language selector at top -->
+    <div class="header-flex" style="justify-content: flex-end; margin-bottom: 20px;">
+      <select id="language-select" class="language-select" aria-label="Select Language">
+        <option value="en">English</option>
+        <option value="ar">العربية</option>
+      </select>
+    </div>
+
+    <header>
+      <h1 data-translate="register">Register</h1>
+    </header>
+
+    <form id="registerForm">
+      <input
+        type="text"
+        id="name"
+        name="name"
+        placeholder=""
+        data-translate="name"
+        autocomplete="name"
+        required
+      />
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder=""
+        data-translate="email"
+        autocomplete="email"
+        required
+      />
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder=""
+        data-translate="password"
+        autocomplete="new-password"
+        required
+      />
+      <input
+        type="password"
+        id="confirmPassword"
+        name="confirmPassword"
+        placeholder=""
+        data-translate="confirmPassword"
+        autocomplete="new-password"
+        required
+      />
+      <button type="submit" data-translate="submit">Submit</button>
+    </form>
+  </div>
+
+  <script src="js/translation.js" defer></script>
+  <script src="js/main.js"></script>
+  <script>
+    translatePage();
+
+    // Zoom in/out with ctrl + mouse wheel
+    window.addEventListener(
+      "wheel",
+      (e) => {
+        if (e.ctrlKey) {
+          e.preventDefault();
+          let scale = Number(document.body.style.zoom) || 1;
+          if (e.deltaY < 0) scale += 0.1;
+          else scale -= 0.1;
+          scale = Math.min(Math.max(0.5, scale), 2);
+          document.body.style.zoom = scale;
+        }
+      },
+      { passive: false }
+    );
+
+    const form = document.getElementById("registerForm");
+    const nameInput = form.name;
+    const emailInput = form.email;
+    const passwordInput = form.password;
+    const confirmPasswordInput = form.confirmPassword;
+
+    // Load saved data if موجودة
+    window.addEventListener("load", () => {
+      if (localStorage.getItem("name")) nameInput.value = localStorage.getItem("name");
+      if (localStorage.getItem("email")) emailInput.value = localStorage.getItem("email");
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (passwordInput.value !== confirmPasswordInput.value) {
+        alert("Passwords do not match!");
+        return;
+      }
+
+      // حفظ الاسم والايميل فقط (لعدم حفظ الباسورد للأمان)
+      localStorage.setItem("name", nameInput.value);
+      localStorage.setItem("email", emailInput.value);
+
+      // منطق التسجيل عبر API ممكن يضاف هنا
+      alert("تم حفظ البيانات! (محاكاة التسجيل)");
+    });
+
+    // ضبط لغة السليكت مع ترجمة الصفحة بعد تحميل كامل الـ DOM
+    document.addEventListener("DOMContentLoaded", () => {
+      const select = document.getElementById("language-select");
+      if (select) {
+        select.value = localStorage.getItem("lang") || (navigator.language.startsWith("ar") ? "ar" : "en");
+        select.addEventListener("change", (e) => {
+          localStorage.setItem("lang", e.target.value);
+          translatePage();
+          // تحديث اتجاه الصفحة تلقائياً
+          document.documentElement.dir = e.target.value === "ar" ? "rtl" : "ltr";
+          document.body.style.textAlign = e.target.value === "ar" ? "right" : "left";
+        });
+      }
+    });
+  </script>
+</body>
+</html>

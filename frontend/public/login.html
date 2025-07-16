@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-translate="login">Login</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- Language Selector at the top -->
+    <div class="header-flex" style="justify-content: flex-end; margin-bottom: 20px;">
+      <select id="language-select" class="language-select" aria-label="Select Language">
+        <option value="en">English</option>
+        <option value="ar">العربية</option>
+      </select>
+    </div>
+
+    <header>
+      <h1 data-translate="login">Login</h1>
+    </header>
+
+    <form id="loginForm">
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder=""
+        data-translate="email"
+        autocomplete="email"
+        required
+      />
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder=""
+        data-translate="password"
+        autocomplete="current-password"
+        required
+      />
+      <button type="submit" data-translate="submit">Submit</button>
+    </form>
+  </div>
+
+  <script src="js/translation.js" defer></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
