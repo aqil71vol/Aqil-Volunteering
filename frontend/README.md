@@ -29,6 +29,7 @@ Aqil-Volunteering/
 ├── frontend/
 │   ├── public/               ← نضع فيه الملفات التي ستُخدّم على الويب
 │   │   ├── index.html
+│   │   ├── dashbord.html
 │   │   ├── login.html
 │   │   ├── register.html
 │   │   ├── pages/

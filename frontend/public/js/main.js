@@ -182,3 +182,44 @@ document.querySelector(".btn-delete-final").addEventListener("click", async () =
     console.error(err);
   }
 });
+
+///////////////////// آخر إضافة للـ Login ////////////////////////
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById('loginForm');
+  if (!form) return; // يتأكد إن الصفحة فيها هذا الفورم قبل تشغيل الكود
+
+  const emailInput = form.email;
+  const passwordInput = form.password;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: emailInput.value.trim(),
+          password: passwordInput.value
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message || 'Login failed');
+        return;
+      }
+
+      // ✅ حفظ الجلسة في localStorage
+      localStorage.setItem('userEmail', emailInput.value.trim());
+
+      alert('✅ Login successful!');
+      window.location.href = 'dashboard.html';
+    } catch (error) {
+      console.error('Error:', error);
+      alert('❌ Error connecting to server');
+    }
+  });
+});

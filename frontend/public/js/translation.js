@@ -55,6 +55,10 @@ const translations = {
     lecture_message: "This page is under construction. Please check back later.",
     training_title: "Training",
     training_message: "This page is under construction. Please check back later.",
+    passwordMismatch: "Passwords do not match",
+    registrationFailed: "Registration failed",
+    registrationSuccess: "Registration successful",
+    serverConnectionError: "Error connecting to server",
     socialLinks: {
       facebook: "https://facebook.com/aqilvolunteer",
       instagram: "https://instagram.com/aqilvolunteer",
@@ -115,6 +119,10 @@ const translations = {
     lecture_message: "هذه الصفحة قيد الإنشاء، يرجى العودة لاحقاً",
     training_title: "المحاضرة",
     training_message: "هذه الصفحة قيد الإنشاء، يرجى العودة لاحقاً",
+    passwordMismatch: "كلمات المرور غير متطابقة",
+    registrationFailed: "فشل التسجيل",
+    registrationSuccess: "تم التسجيل بنجاح",
+    serverConnectionError: "خطأ في الاتصال بالخادم",
     socialLinks: {
       facebook: "https://facebook.com/aqilvolunteer",
       instagram: "https://instagram.com/aqilvolunteer",
@@ -123,6 +131,13 @@ const translations = {
   }
 };
 
+
+// دالة لعرض رسالة مترجمة بناءً على اللغة المختارة
+function alertMessage(key) {
+  const lang = localStorage.getItem("lang") || "en";
+  const message = translations[lang]?.[key] || key;
+  alert(message);
+}
 
 
 function getUserLang() {
