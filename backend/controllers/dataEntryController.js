@@ -9,14 +9,33 @@ exports.create = async (req, res) => {
   }
 };
 
+// exports.getAll = async (req, res) => {
+//   try {
+//     const rows = await DataEntry.getAll();
+//     res.json(rows);
+//   } catch (err) {
+//     res.status(500).json({ error: err });
+//   }
+// };
+
 exports.getAll = async (req, res) => {
   try {
-    const rows = await DataEntry.getAll();
+    const filters = {
+      gender: req.query.gender,
+      nationality: req.query.nationality,
+      q: req.query.q,
+    };
+    const sort = {
+      key: req.query.sort,
+      order: req.query.order,
+    };
+    const rows = await DataEntry.getAll(filters, sort);
     res.json(rows);
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).json({ error: err.message });
   }
 };
+
 
 exports.getById = async (req, res) => {
   try {

@@ -1,6 +1,6 @@
 // backend/models/data_entry.js
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, dataTypes) => {
   const DataEntry = sequelize.define('data_entry', {
     full_name: {
       type: DataTypes.STRING,
@@ -40,5 +40,5 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: true  // ✅ يضيف createdAt و updatedAt تلقائيًا
   });
 
-  return DataEntry;
+  return dataEntry;
 };

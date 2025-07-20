@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
-const authMiddleware = require('../middleware/authMiddleware');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 // ✅ جلب بيانات المستخدم المحمي بـ JWT
 router.get('/me', authMiddleware, async (req, res) => {

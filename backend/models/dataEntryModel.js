@@ -1,3 +1,4 @@
+
 const db = require('../config/db');
 
 // ✅ إنشاء سجل جديد
@@ -12,10 +13,41 @@ exports.create = async (data) => {
 };
 
 // ✅ جلب كل البيانات (غير المحذوفة)
-exports.getAll = async () => {
-  const [rows] = await db.execute("SELECT * FROM data_entries WHERE deleted = 0");
+// exports.getAll = async () => {
+//   const [rows] = await db.execute("SELECT * FROM data_entries WHERE deleted = 0");
+//   return rows;
+// };
+
+exports.getAll = async (filters = {}, sort = {}) => {
+  let sql = "SELECT * FROM data_entries WHERE deleted = 0";
+  const params = [];
+
+  // الفلترة
+  if (filters.gender) {
+    sql += " AND gender = ?";
+    params.push(filters.gender);
+  }
+  if (filters.nationality) {
+    sql += " AND nationality = ?";
+    params.push(filters.nationality);
+  }
+  if (filters.q) {
+    sql += ` AND (full_name LIKE ? OR email LIKE ? OR phone LIKE ? OR id_number LIKE ?)`;
+    const term = `%${filters.q}%`;
+    params.push(term, term, term, term);
+  }
+
+  // الفرز
+  if (sort.key && ['full_name', 'created_at'].includes(sort.key)) {
+    sql += ` ORDER BY ${sort.key} ${sort.order === 'desc' ? 'DESC' : 'ASC'}`;
+  } else {
+    sql += " ORDER BY created_at DESC";
+  }
+
+  const [rows] = await db.execute(sql, params);
   return rows;
 };
+
 
 // ✅ جلب سجل واحد حسب ID
 exports.getById = async (id) => {

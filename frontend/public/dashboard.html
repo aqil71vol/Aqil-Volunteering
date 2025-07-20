@@ -72,6 +72,64 @@
     <button id="logoutBtn" class="btn logout-btn">Logout</button>
     <button id="logoutBtn">Logout</button>
 
+    <input type="text" id="searchBox" placeholder="🔍 ابحث بالاسم أو الرقم أو الهاتف" style="margin: 20px; padding: 5px;">
+    <input type="text" id="searchBox" placeholder="🔍 ابحث بالاسم أو الرقم أو الهاتف" style="margin: 20px; padding: 5px;">
+
+    <input
+    type="text"
+    id="searchInput"
+    placeholder="ابحث عن اسم، بريد، هاتف أو رقم بطاقة..."
+    oninput="debouncedSearch()"
+    />
+
+<select id="filterGender" onchange="applyFilters()">
+    <option value="">كل الأجناس</option>
+    <option value="male">ذكر</option>
+    <option value="female">أنثى</option>
+  </select>
+
+  <select id="filterNationality" onchange="applyFilters()">
+    <option value="">كل الجنسيات</option>
+    <!-- عبيها ديناميكياً أو يدوياً -->
+    <option value="Yemeni">Yemeni</option>
+    <option value="Iraqi">Iraqi</option>
+    <option value="Iraq">Iraq</option>
+  </select>
+
+  <button onclick="sortTable('full_name')">ترتيب حسب الاسم</button>
+  <button onclick="sortTable('created_at')">ترتيب حسب تاريخ الإدخال</button>
+
+  <h2>📋 بيانات المتطوعين</h2>
+  <table id="dataTable" border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Full Name</th>
+        <th>ID Number</th>
+        <th>Gender</th>
+        <th>Nationality</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Address</th>
+        <th>Actions</th> <!-- جديد -->
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+<div id="createForm" style="border:1px solid #ccc; padding:10px; margin-top:20px;">
+  <h3>📝 إضافة سجل جديد</h3>
+  <input type="text" id="newFullName" placeholder="الاسم الكامل"><br>
+  <input type="text" id="newIdNumber" placeholder="رقم البطاقة"><br>
+  <input type="text" id="newGender" placeholder="الجنس"><br>
+  <input type="text" id="newNationality" placeholder="الجنسية"><br>
+  <input type="email" id="newEmail" placeholder="البريد الإلكتروني"><br>
+  <input type="text" id="newPhone" placeholder="الهاتف"><br>
+  <input type="text" id="newAddress" placeholder="العنوان"><br>
+  <button onclick="submitNew()">➕ إضافة</button>
+</div>
+
+
   </main>
 
   <!-- الفوتر -->

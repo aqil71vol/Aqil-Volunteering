@@ -21,6 +21,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);          // ← إذا عندك ملف users.js
 app.use('/api/projects', projectRoutes);    // ← المشاريع
 app.use('/api/data-entry', dataEntryRoutes); // ← لو عندك إدخال بيانات
+app.use("/api/data-entry", require("./routes/dataEntry"));
 
 // ✅ اختبار الاتصال
 app.get('/', (req, res) => {
