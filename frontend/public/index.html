@@ -1,16 +1,19 @@
+<!-- Aqil-Volunteering/frontend/public/index.html -->
 <!DOCTYPE html>
 <html lang="en">
-<!-- <html lang="en" dir="ltr"> -->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Aqil Volunteering</title>
+  <title data-translate="title">Aqil Volunteering</title>
   <link rel="stylesheet" href="css/style.css" />
-  <!-- Font Awesome for social icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer" />
 </head>
 
 <body>
+  <!-- Header -->
   <header class="header">
     <div class="header-flex container">
       <h1 data-translate="welcome">Welcome to Aqil Volunteering</h1>
@@ -21,26 +24,24 @@
     </div>
   </header>
 
+  <!-- Main Content -->
   <main class="container main-content">
 
-      <!-- الكرة -->
-  <div id="ball" class="ball" data-translate="ball">Hold me</div>
+    <!-- Interactive Ball -->
+    <div id="ball" class="ball" data-translate="ball">Hold me</div>
+    <audio id="kickSound" src="assets/sounds/rolling_ball_simple.mp3" preload="auto"></audio>
 
-  <!-- صوت -->
-  <audio id="kickSound" src="assets/sounds/rolling_ball_simple.mp3" preload="auto"></audio>
-  
-  <!-- صورة مستطيلة -->
-  <div class="banner-container">
-    <img src="assets/images/volunteer-day-banner-collection-free-vector.jpg" alt="صورة ترويجية" class="banner-image">
-  </div>
+    <!-- Banner Image -->
+    <div class="banner-container">
+      <img src="assets/images/volunteer-day-banner-collection-free-vector.jpg" alt="Promotional Banner" class="banner-image">
+    </div>
 
-  <!-- صورة خلفية -->
-  <div class="art-frame" style="background-image: url('assets/images/world-humanitarian-day-with-global-celebration-of-helping-people-work-together-charity-donation-and-volunteer-in-flat-cartoon-illustration-vector.jpg');">
-    <div class="overlay-text" data-translate="background">Volunteering Day</div>
-  </div>
+    <!-- Background Section -->
+    <div class="art-frame" style="background-image: url('assets/images/world-humanitarian-day-with-global-celebration-of-helping-people-work-together-charity-donation-and-volunteer-in-flat-cartoon-illustration-vector.jpg');">
+      <div class="overlay-text" data-translate="background">Volunteering Day</div>
+    </div>
 
-
-    <!-- فقرات ترحيبية قابلة للطي -->
+    <!-- Collapsible Info Sections -->
     <section class="collapsible-section">
       <button class="collapsible" aria-expanded="false">
         <span data-translate="p1_title">🌟 What is Aqil Volunteering?</span>
@@ -65,30 +66,37 @@
       </div>
     </section>
 
-    <div class="card">
-      <h3 data-translate="welcome">Welcome, Aqil!</h3>
-      <p data-translate="info">Here you can manage your volunteering projects, view applications, and more.</p>
+    <!-- Dashboard Cards Placeholders -->
+    <div class="dashboard-cards">
+      <div class="card" id="welcome-card">
+        <h3 data-translate="welcome">Welcome, Aqil!</h3>
+        <p data-translate="info">Here you can manage your volunteering projects, view applications, and more.</p>
+      </div>
+
+      <div class="card" id="projects-card">
+        <h3 data-translate="projects">Your Projects</h3>
+        <ul id="projects-list">
+          <li data-translate="projectsInfo">No projects created yet. Click to add a new one.</li>
+        </ul>
+      </div>
+
+      <div class="card" id="applications-card">
+        <h3 data-translate="applications">Volunteer Applications</h3>
+        <ul id="applications-list">
+          <li data-translate="applicationsInfo">No applications at the moment.</li>
+        </ul>
+      </div>
     </div>
 
-    <div class="card">
-      <h3 data-translate="projects">Your Projects</h3>
-      <p data-translate="projectsInfo">No projects created yet. Click to add a new one.</p>
-    </div>
-
-    <div class="card">
-      <h3 data-translate="applications">Volunteer Applications</h3>
-      <p data-translate="applicationsInfo">No applications at the moment.</p>
-    </div>
-
-    <!-- أزرار الانتقال -->
+    <!-- Action Buttons -->
     <section class="actions">
       <a href="login.html" class="btn" data-translate="login">Login</a>
       <a href="register.html" class="btn" data-translate="register">Register</a>
     </section>
 
   </main>
-  
-  <!-- الفوتر -->
+
+  <!-- Footer -->
   <footer class="footer">
     <div class="container social">
       <a id="fb-link" target="_blank" aria-label="Facebook" title="Facebook">
@@ -103,10 +111,10 @@
     </div>
     <p id="copyright" class="copyright" data-translate="copyright">© 2025 Aqil. All rights reserved.</p>
   </footer>
-  
-<script src="js/translation.js" defer></script>
-<script src="js/main.js" defer></script>
-<script src="js/ball.js" defer></script>
+
+  <!-- Scripts -->
+  <script src="js/translation.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/ball.js" defer></script>
 </body>
 </html>
-

@@ -1,3 +1,4 @@
+<!-- Aqil-Volunteering/frontend/public/login.html -->
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
@@ -7,47 +8,41 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <div class="container">
-    <!-- Language Selector at the top -->
-    <div class="header-flex" style="justify-content: flex-end; margin-bottom: 20px;">
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-flex">
+      <h1 data-translate="login">Login</h1>
       <select id="language-select" class="language-select" aria-label="Select Language">
         <option value="en">English</option>
         <option value="ar">العربية</option>
       </select>
     </div>
+  </header>
 
-    <header>
-      <h1 data-translate="login">Login</h1>
-    </header>
+  <!-- Main Content -->
+  <main class="container">
+    <div class="card">
+      <form id="loginForm">
+        <input type="email" id="email" name="email" placeholder="" data-translate="email" autocomplete="email" required />
+        <input type="password" id="password" name="password" placeholder="" data-translate="password" autocomplete="current-password" required />
+        <button type="submit" data-translate="submit">Submit</button>
+        <p style="text-align:center; margin-top:15px;">
+          Don't have an account? <a href="register.html">Register here</a>
+        </p>
+      </form>
+    </div>
+  </main>
 
-    <form id="loginForm">
-      <input
-        type="email"
-        id="email"
-        name="email"
-        placeholder=""
-        data-translate="email"
-        autocomplete="email"
-        required
-      />
-      <input
-        type="password"
-        id="password"
-        name="password"
-        placeholder=""
-        data-translate="password"
-        autocomplete="current-password"
-        required
-      />
-      <button type="submit" data-translate="submit">Submit</button>
-    </form>
-  </div>
-
-  <div id="logout-message" class="success-message" style="display: none;"></div>
-
+  <footer class="footer">
+    <div class="social">
+      <a href="#" aria-label="Facebook">🌐</a>
+      <a href="#" aria-label="Twitter">🐦</a>
+    </div>
+    <p>&copy; 2025 My Website. All rights reserved.</p>
+  </footer>
 
   <script src="js/translation.js" defer></script>
-  <script src="js/main.js"></script>
+  <script src="js/main.js" defer></script>
   <script src="js/login.js" defer></script>
 </body>
 </html>

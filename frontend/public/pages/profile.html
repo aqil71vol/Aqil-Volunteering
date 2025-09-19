@@ -1,0 +1,169 @@
+<!-- aqil-volunteering/frontend/public/pages/profile.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-translate="profile">Profile</title>
+  <link rel="stylesheet" href="../css/profile-style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+</head>
+<body>
+
+<!-- Header -->
+<header class="profile-header">
+  <div class="profile-top">
+    <h1 id="pageTitle" data-translate="profile">Profile</h1>
+    <!-- <img id="profileImage" src="/uploads/default.png" alt="Profile Photo" class="profile-img"> -->
+    <img id="profileImage" src="/uploads/default.png" alt="" class="profile-img">
+    <h2 id="full_name_display">User Name</h2>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="profile-nav">
+    <button class="nav-btn active" data-target="personal" data-translate="personal_info">Personal Info</button>
+    <button class="nav-btn" data-target="experience" data-translate="experience">Experience</button>
+    <button class="nav-btn" data-target="projects" data-translate="projects">Projects</button>
+    <button class="nav-btn" data-target="courses" data-translate="courses">Courses</button>
+    <button class="nav-btn" data-target="skills" data-translate="skills">Skills</button>
+    <button class="nav-btn" data-target="languages" data-translate="languages">Languages</button>
+    <button class="nav-btn" data-target="photo" data-translate="photo">Photo</button>
+  </nav>
+
+  <!-- Language Selector -->
+  <div class="lang-switcher">
+    <label for="language-select"><i class="fa fa-globe"></i></label>
+    <select id="language-select">
+      <option value="en">English</option>
+      <option value="ar">العربية</option>
+    </select>
+  </div>
+</header>
+
+<!-- Main Sections -->
+<main class="profile-main">
+  <!-- Personal Info -->
+  <section id="personal" class="profile-section">
+    <h2 data-translate="personal_info">Personal Information</h2>
+    <form id="personalForm">
+      <input type="hidden" id="id">
+      <input type="hidden" id="user_id">
+      <input type="hidden" id="created_at">
+      <input type="hidden" id="updated_at">
+
+      <div class="input-group">
+        <i class="fa fa-id-card icon"></i>
+        <input type="text" id="national_id" placeholder="National ID" data-translate="national_id">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-user icon"></i>
+        <input type="text" id="full_name" placeholder="Full Name" data-translate="name">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-envelope icon"></i>
+        <input type="email" id="email" placeholder="Email" data-translate="email" readonly>
+      </div>
+      <div class="input-group">
+        <i class="fa fa-user-circle icon"></i>
+        <input type="text" id="mother_name" placeholder="Mother's Name" data-translate="mother_name">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-calendar icon"></i>
+        <input type="date" id="dob" data-translate="dob">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-venus-mars icon"></i>
+        <select id="gender">
+          <option value="" data-translate="select_gender">Select Gender</option>
+          <option value="male" data-translate="male">Male</option>
+          <option value="female" data-translate="female">Female</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <i class="fa fa-globe icon"></i>
+        <input type="text" id="nationality" placeholder="Nationality" data-translate="nationality">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-flag icon"></i>
+        <input type="text" id="country" placeholder="Country of Residence" data-translate="country">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-home icon"></i>
+        <input type="text" id="previous_address" placeholder="Previous Address" data-translate="previous_address">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-map-marker-alt icon"></i>
+        <input type="text" id="current_address" placeholder="Current Address" data-translate="current_address">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-heart icon"></i>
+        <select id="marital_status">
+          <option value="" data-translate="select_marital">Select Marital Status</option>
+          <option value="single" data-translate="single">Single</option>
+          <option value="married" data-translate="married">Married</option>
+          <option value="divorced" data-translate="divorced">Divorced</option>
+          <option value="widowed" data-translate="widowed">Widowed</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <i class="fa fa-users icon"></i>
+        <input type="number" id="family_members" placeholder="Number of Family Members" min="0" data-translate="family_members">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-phone icon"></i>
+        <input type="text" id="phone" placeholder="Phone" data-translate="phone">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-info-circle icon"></i>
+        <textarea id="bio" placeholder="Bio" data-translate="bio"></textarea>
+      </div>
+      <div class="input-group">
+        <i class="fa fa-image icon"></i>
+        <input type="file" id="profile_image" accept="image/*">
+      </div>
+      <button type="submit" class="btn" data-translate="save">Save</button>
+    </form>
+  </section>
+
+  <!-- Other Sections (placeholders) -->
+  <section id="experience" class="profile-section hidden">
+    <h2 data-translate="experience">Experience</h2>
+    <div id="experience-list"></div>
+    <button id="addExperience" class="btn" data-translate="add"><i class="fa fa-plus"></i> Add</button>
+  </section>
+
+  <section id="projects" class="profile-section hidden">
+    <h2 data-translate="projects">Projects</h2>
+    <div id="projects-list"></div>
+    <button id="addProject" class="btn" data-translate="add"><i class="fa fa-plus"></i> Add</button>
+  </section>
+
+  <section id="courses" class="profile-section hidden">
+    <h2 data-translate="courses">Courses</h2>
+    <div id="courses-list"></div>
+    <button id="addCourse" class="btn" data-translate="add"><i class="fa fa-plus"></i> Add</button>
+  </section>
+
+  <section id="skills" class="profile-section hidden">
+    <h2 data-translate="skills">Skills</h2>
+    <div id="skills-list"></div>
+    <button id="addSkill" class="btn" data-translate="add"><i class="fa fa-plus"></i> Add</button>
+  </section>
+
+  <section id="languages" class="profile-section hidden">
+    <h2 data-translate="languages">Languages</h2>
+    <div id="languages-list"></div>
+    <button id="addLanguage" class="btn" data-translate="add"><i class="fa fa-plus"></i> Add</button>
+  </section>
+
+  <section id="photo" class="profile-section hidden">
+    <h2 data-translate="photo">Profile Photo</h2>
+    <input type="file" id="photoUpload" accept="image/*">
+    <button id="savePhoto" class="btn"><i class="fa fa-upload"></i> <span data-translate="save_photo">Upload</span></button>
+  </section>
+</main>
+
+<script src="../js/translation.js" defer></script>
+<script src="../js/profile-script.js" defer></script>
+</body>
+</html>

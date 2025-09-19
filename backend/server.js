@@ -1,117 +1,54 @@
+// aqil-volunteering/backend/server.js
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const db = require('./models'); // index.js يحتوي على جميع الموديلات والعلاقات
 
-// مسارات الـ API
-const authRoutes = require('./api/auth');
-const userRoutes = require('./api/users');       // لو أنشأته
-const projectRoutes = require('./api/projects'); // API المشاريع
-const dataEntryRoutes = require('./api/dataEntry'); // إن وُجد
+// استدعاء جميع الراوترات (تأكد أن أسماء الملفات مفردة ومتطابقة)
+const authRoute = require('./routes/authRoute');
+const userRoute = require('./routes/userRoute');
+const infoRoute = require('./routes/infoRoute');
+const experienceRoute = require('./routes/experienceRoute'); // مفرد
+const skillRoute = require('./routes/skillRoute');           // مفرد
+const languageRoute = require('./routes/languageRoute');     // مفرد
+const projectRoute = require('./routes/projectRoute');       // مفرد
+const trainingRoute = require('./routes/trainingRoute');     // مفرد
+const fileRoute = require('./routes/fileRoute');             // مفرد
+const archiveRoute = require('./routes/userDataEntryArchiveRoute'); // مفرد
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// ✅ الميدل وير
+// Middleware
 app.use(cors());
-app.use(bodyParser.json()); // أو: app.use(express.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
 
-// ✅ ربط المسارات
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);          // ← إذا عندك ملف users.js
-app.use('/api/projects', projectRoutes);    // ← المشاريع
-app.use('/api/data-entry', dataEntryRoutes); // ← لو عندك إدخال بيانات
-app.use("/api/data-entry", require("./routes/dataEntry"));
+// Static files
+app.use('/uploads', express.static('uploads'));
 
-// ✅ اختبار الاتصال
-app.get('/', (req, res) => {
-  res.send('✅ API Server is running!');
-});
+// Routes
+app.use('/api/auth', authRoute);
+app.use('/api/user', userRoute);
+app.use('/api/info', infoRoute);
+app.use('/api/experience', experienceRoute);
+app.use('/api/skill', skillRoute);
+app.use('/api/language', languageRoute);
+app.use('/api/project', projectRoute);
+app.use('/api/training', trainingRoute);
+app.use('/api/file', fileRoute);
+app.use('/api/archive', archiveRoute);
 
-// ✅ تشغيل السيرفر
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+// Health check
+app.get('/', (req, res) => res.send('Aqil-Volunteering Backend is running ✅'));
 
+// Start server
+const PORT = process.env.PORT || 5000;
 
-
-// require('dotenv').config();
-// const express = require('express');
-// const cors = require('cors');
-// const app = express();
-// const port = process.env.PORT || 3000;
-
-// // Middleware
-// app.use(cors());
-// app.use(express.json());
-
-// // قاعدة البيانات (Sequelize)
-// // ❌ احذف هذا إذا لا تستخدم Sequelize
-// // const db = require('./models');
-
-// // ✅ مزامنة الجداول مع Sequelize
-// // db.sequelize.sync({ alter: true })
-//   // .then(() => console.log("✅ All tables synced successfully"))
-//   // .catch(err => console.error("❌ Failed to sync database:", err));
-
-// // ✅ المسارات (routes)
-// const authRoutes = require('./routes/auth');
-// const dataEntryRoutes = require('./routes/dataEntry');
-
-// app.use('/api/auth', authRoutes);
-// app.use('/api/data-entry', dataEntryRoutes);
-
-// // اختبار السيرفر
-// app.get("/", (req, res) => {
-//   res.send("🎉 Back-end is working!");
-// });
-
-// // بدء تشغيل السيرفر
-// app.listen(port, () => {
-//   console.log(`🚀 Server running on http://localhost:${port}`);
-// });
-
-// ///////////////////////////////////////////////
-
-// const express = require('express');
-// const cors = require('cors');
-// const bodyParser = require('body-parser');
-// const authRoutes = require('./api/auth'); // ← ملف auth.js
-
-// const app = express();
-// const PORT = process.env.PORT || 3000;
-
-// // Middlewares
-// app.use(cors()); // السماح لتطبيقات الجوال بالاتصال
-// app.use(bodyParser.json());
-
-// // Routes
-// app.use('/api/auth', authRoutes); // Example: /api/auth/login
-
-// // Simple check route
-// app.get('/', (req, res) => {
-//   res.send('API Server is running ✅');
-// });
-
-// // Start server
-// app.listen(PORT, () => {
-//   console.log(`🚀 Server running on http://localhost:${PORT}`);
-// });
-
-// ///////////////////////////////////////////////
-
-// const userRoutes = require('./api/users');
-// const projectRoutes = require('./api/projects');
-
-// app.use('/api/users', userRoutes);       // ← /api/users/
-// app.use('/api/projects', projectRoutes); // ← /api/projects/
-
-// ///////////////////////////////////////////////
-
-// const projectRoutes = require('./api/projects');
-// app.use('/api/projects', projectRoutes);
-
-// const authRoutes = require('./api/auth');
-// app.use('/api/auth', authRoutes);
-
-// ///////////////////////////////////////////////
+db.sequelize.authenticate()
+  .then(() => {
+    console.log('Database connected ✅');
+    app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+  })
+  .catch(err => console.error('Unable to connect to database:', err));

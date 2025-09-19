@@ -1,3 +1,4 @@
+/* aqil-volunteer/frontend/public/css/style.css */
 /* === ROOT VARIABLES === */
 :root {
   --main-color: #007bff;
@@ -8,19 +9,21 @@
   --header-text: #fff;
   --btn-bg: var(--main-color);
   --btn-hover-bg: var(--hover-color);
+  --toast-success: #28a745;
+  --toast-error: #dc3545;
 }
 
 /* === RESET === */
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--bg-color);
   color: var(--text-color);
-  margin: 0;
-  padding: 0;
   transition: direction 0.3s ease;
 }
 
@@ -36,7 +39,6 @@ body {
   color: var(--header-text);
   padding: 15px 0;
   margin-bottom: 30px;
-  /* تثبيت الهيدر عند التمرير */
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -48,15 +50,18 @@ body {
   align-items: center;
 }
 
+html[dir="rtl"] .header-flex {
+  flex-direction: row-reverse;
+}
+
+/* === LANGUAGE SELECT === */
 .language-select {
   padding: 6px 10px;
   font-size: 1rem;
   border-radius: 4px;
   border: 1px solid #ccc;
   cursor: pointer;
-  outline: none;
   margin-top: 10px;
-  align-self: flex-end;
 }
 
 .language-select:hover,
@@ -68,12 +73,11 @@ body {
 /* === HEADINGS === */
 h1 {
   font-weight: 700;
-  margin: 0;
   font-size: 1.8rem;
   user-select: none;
 }
 
-/* === FORMS === */
+/* === FORM STYLES === */
 form {
   display: flex;
   flex-direction: column;
@@ -92,7 +96,7 @@ form input {
   padding: 12px 16px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  background-color: #fff;
+  background: #fff;
   transition: border-color 0.3s ease;
 }
 
@@ -118,7 +122,7 @@ form button:focus {
   transform: scale(1.03);
 }
 
-/* === DASHBOARD CARDS === */
+/* === CARDS === */
 .card {
   background: white;
   border-radius: 10px;
@@ -130,7 +134,7 @@ form button:focus {
 
 .card:hover {
   transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 /* === COLLAPSIBLES === */
@@ -138,21 +142,18 @@ form button:focus {
   margin-bottom: 20px;
   border-radius: 8px;
   background-color: #fff;
-  box-shadow: 0 0 8px rgb(0 0 0 / 0.1);
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
   overflow: hidden;
 }
 
-
 .collapsible {
   width: 100%;
-  background-color: var(--main-color);
+  background: var(--main-color);
   color: #fff;
   cursor: pointer;
   padding: 15px 20px;
   border: none;
   text-align: left;
-  outline: none;
-  font-size: 1.1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -163,22 +164,13 @@ form button:focus {
   background-color: var(--hover-color);
 }
 
-/*.collapsible:focus {
-  box-shadow: 0 0 0 3px #a7cdf0;
-}*/
-
-.collapsible:focus-visible {
-  box-shadow: 0 0 0 3px #a7cdf0;
-}
-
-
 .arrow {
   transition: transform 0.3s ease;
   font-size: 1.3rem;
 }
 
 .collapsible[aria-expanded="true"] + .content {
-  max-height: 300px;
+  max-height: 400px;
   padding-top: 15px;
 }
 
@@ -194,34 +186,28 @@ form button:focus {
   background-color: #fff;
   font-size: 1rem;
   line-height: 1.5;
-  color: var(--text-color);
 }
 
-
-/* === IMAGE & VIDEO === */
+/* === IMAGES & VIDEO === */
 .image-section,
 .video-section {
   margin: 30px 0;
   text-align: center;
 }
 
-.main-image {
-  max-width: 100%;
+.main-image,
+.main-video {
+  width: 100%;
   height: auto;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   transition: transform 0.3s ease;
   cursor: pointer;
 }
 
-.main-image:hover {
+.main-image:hover,
+.main-video:hover {
   transform: scale(1.05);
-}
-
-.main-video {
-  max-width: 100%;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
 }
 
 /* === BUTTONS / ACTIONS === */
@@ -241,15 +227,103 @@ form button:focus {
   font-weight: 600;
   text-decoration: none;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 4px 6px rgb(0 0 0 / 0.15);
-  user-select: none;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+
+.logout-btn {
+  background-color: #dc3545;
+}
+
+.logout-btn:hover {
+  background-color: #b02a37;
 }
 
 .btn:hover,
 .btn:focus {
   background-color: var(--btn-hover-bg);
   transform: scale(1.05);
-  outline: none;
+}
+
+/* === BALL === */
+.ball {
+  position: fixed;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), rgba(0,128,255,0.5));
+  backdrop-filter: blur(5px);
+  border: 2px solid rgba(255,255,255,0.3);
+  box-shadow: 0 0 12px rgba(0,128,255,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  z-index: 9999;
+  user-select: none;
+  transition: left 0.5s ease, top 0.5s ease, transform 0.2s ease;
+}
+
+/* === TOAST NOTIFICATIONS === */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--main-color);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 500;
+  z-index: 10000;
+  opacity: 0.95;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  animation: slideIn 0.3s ease forwards;
+}
+
+.toast-success {
+  background-color: var(--toast-success);
+}
+
+.toast-error {
+  background-color: var(--toast-error);
+}
+
+@keyframes slideIn {
+  from { transform: translate(-50%, 50px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 0.95; }
+}
+
+/* === FOOTER === */
+.footer {
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
+}
+
+.footer .social a {
+  color: #333;
+  margin: 0 10px;
+  font-size: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.footer .social a:hover {
+  color: #0077ff;
+}
+
+.footer p {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+/* === RTL SUPPORT === */
+html[dir="rtl"] .actions,
+html[dir="rtl"] form,
+html[dir="rtl"] .card {
+  text-align: right;
 }
 
 /* === RESPONSIVE === */
@@ -263,276 +337,9 @@ form button:focus {
     flex-direction: column;
     gap: 15px;
   }
-}
 
-.footer {
-  text-align: center;
-  padding: 20px;
-  margin-top: 40px;
-  background-color: #f9f9f9;
-  border-top: 1px solid #ddd;
+  .main-image,
+  .main-video {
+    width: 100%;
+  }
 }
-.footer .social {
-  margin-bottom: 10px;
-}
-.footer .social a {
-  color: #333;
-  margin: 0 10px;
-  font-size: 1.5rem;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-.footer .social a:hover {
-  color: #0077ff;
-}
-
-/* ❌ احذف أو علّق هذا السطر لأنه يعطّل الطي بالكامل */
-/*
-.content {
-  display: none;
-  padding: 10px;
-}
-*/
-
-/* صورة الهيدر */
-.banner-container {
-  width: 100%;
-  overflow: hidden;
-}
-
-.banner-image {
-  width: 100%;
-  height: auto;
-  display: block;
-  max-height: 250px;
-  object-fit: cover;
-  border-bottom: 2px solid #ccc;
-}
-
-/* الكرة */
-
-.ball {
-  position: fixed;
-  color: white;
-  width: 80px;
-  height: 80px;
-  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), rgba(0,128,255,0.5));
-  backdrop-filter: blur(5px);
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.3);
-  box-shadow: 0 0 12px rgba(0, 128, 255, 0.6);
-  cursor: pointer;
-  z-index: 9999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  user-select: none;
-  transition: left 0.5s ease, top 0.5s ease, transform 0.2s ease;
-}
-
-/* صورة خلفية */
-
-.art-frame,
-.art-frame-container {
-  width: 100%;
-  max-width: 700px;
-  height: 300px;
-  margin: 50px auto;
-  border: 8px solid #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-  position: relative;
-  background-size: cover;
-  background-position: center;
-  overflow: hidden;
-}
-
-.art-frame .overlay-text,
-.art-frame-container .overlay-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 28px;
-  color: #fff;
-  font-weight: bold;
-  text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
-}
-
-
-
-/* التنسيق الأساسي للأزرار */
-.btn {
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-  margin: 5px;
-  text-align: center;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-}
-
-/* أزرار الوظائف المختلفة */
-
-/* زر التعديل */
-.btn-edit {
-  background-color: #4CAF50; /* اللون الأخضر */
-  color: white;
-}
-.btn-edit:hover {
-  background-color: #45a049; /* لون أكثر داكنًا عند التمرير */
-}
-
-/* زر الإرجاع */
-.btn-restore {
-  background-color: #FF9800; /* اللون البرتقالي */
-  color: white;
-}
-.btn-restore:hover {
-  background-color: #fb8c00; /* لون أكثر داكنًا عند التمرير */
-}
-
-/* زر الحذف */
-.btn-delete {
-  background-color: #F44336; /* اللون الأحمر */
-  color: white;
-}
-.btn-delete:hover {
-  background-color: #e53935; /* لون أكثر داكنًا عند التمرير */
-}
-
-/* زر مسح جميع البيانات */
-.btn-clear {
-  background-color: #9E9E9E; /* اللون الرمادي */
-  color: white;
-}
-.btn-clear:hover {
-  background-color: #757575; /* لون أكثر داكنًا عند التمرير */
-}
-
-/* زر الحفظ */
-.btn-confirm {
-  background-color: #00BCD4; /* اللون السماوي */
-  color: white;
-}
-.btn-confirm:hover {
-  background-color: #00acc1; /* لون أكثر داكنًا عند التمرير */
-}
-
-/* حقل البحث */
-#search {
-  padding: 8px;
-  font-size: 16px;
-  width: 100%;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-
-/* أزرار اللغة */
-.language-select {
-  padding: 8px;
-  font-size: 16px;
-  margin-bottom: 20px;
-  border-radius: 5px;
-}
-
-.btn.danger {
-  background-color: #e74c3c;
-  color: white;
-  margin-top: 15px;
-}
-
-.logout-btn {
-  background-color: #e74c3c;
-  color: white;
-  padding: 8px 16px;
-  margin-top: 20px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-.logout-btn:hover {
-  background-color: #c0392b;
-}
-
-.success-message {
-  background-color: #dff0d8;
-  color: #3c763d;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #d6e9c6;
-  border-radius: 5px;
-}
-
-
-
-
-/* ==== تجريبي: تنسيق صفحات الدخول والتسجيل ==== */
-
-/* 
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f7f7f7;
-  margin: 0;
-  padding: 0;
-}
-
-.centered-form {
-  max-width: 400px;
-  margin: 60px auto;
-  background-color: #fff;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
-}
-
-button {
-  background-color: #007bff;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-a {
-  display: block;
-  text-align: center;
-  margin-top: 1rem;
-  color: #007bff;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
- */

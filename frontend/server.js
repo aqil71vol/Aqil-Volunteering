@@ -1,50 +1,32 @@
+//aqil-volunteering/frontend/server.js
 const express = require('express');
 const path = require('path');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
 
-// ✅ خلي المنفذ يقرأ من متغير البيئة، عشان Railway يشتغل
 const PORT = process.env.PORT || 3000;
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
 
-// ✅ بروكسي: إذا عندك باك إند منفصل على Railway أو لوكال
-app.use('/api', createProxyMiddleware({
-  target: 'https://your-backend-app.up.railway.app', // ← غيّر هذا حسب رابط الباك إند عندك
-  changeOrigin: true,
-}));
+app.use(
+  '/api',
+  createProxyMiddleware({
+    target: BACKEND_URL,
+    changeOrigin: true,
+    pathRewrite: { '^/api': '' },
+    onProxyReq(proxyReq, req, res) {
+      console.log(`[PROXY] ${req.method} ${req.originalUrl} -> ${BACKEND_URL}`);
+    },
+    onError(err, req, res) {
+      console.error('[PROXY ERROR]', err.message);
+      res.status(500).send('Proxy error');
+    },
+  })
+);
 
-// ✅ ملفات الموقع (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ✅ شغّل السيرفر
 app.listen(PORT, () => {
   console.log(`🚀 Frontend server running at http://localhost:${PORT}`);
+  console.log(`🔗 Proxying /api requests to: ${BACKEND_URL}`);
 });
-
-
-
-// // ✅ إضافة: استيراد proxy middleware لتوجيه /api إلى الباك إند
-// const { createProxyMiddleware } = require('http-proxy-middleware');
-
-// const express = require('express');
-// const path = require('path');
-
-// const app = express();
-// const PORT = 3000;
-
-// // ✅ إعداد البروكسي لتحويل أي طلب يبدأ بـ /api إلى الباك إند
-// app.use(
-//   '/api',
-//   createProxyMiddleware({
-//     target: 'http://localhost:5000', // ← رابط الباك إند
-//     changeOrigin: true
-//   })
-// );
-
-// // ✅ ملفات الفرونت إند الثابتة
-// app.use(express.static(path.join(__dirname, 'public')));
-
-// // ✅ تشغيل السيرفر
-// app.listen(PORT, () => {
-//   console.log(`🚀 Frontend Server running at http://localhost:${PORT}`);
-// });

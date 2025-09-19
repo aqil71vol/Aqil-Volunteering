@@ -1,225 +1,166 @@
-// main.js
-
+// Aqil-Volunteering/frontend/public/js/main.js
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll('.collapsible').forEach(button => {
-    button.addEventListener('click', () => {
-      const expanded = button.getAttribute('aria-expanded') === 'true';
-      const content = button.nextElementSibling;
 
-      button.setAttribute('aria-expanded', (!expanded).toString());
+  /** ==========================
+   * Toast Notifications
+   * ========================== */
+  const showToast = (msg, type = "info") => {
+    // إزالة أي توست سابق
+    document.querySelectorAll(".toast").forEach(t => t.remove());
 
-      if (!expanded) {
-        content.style.maxHeight = content.scrollHeight + "px";
-        content.style.paddingTop = "15px";
-      } else {
-        content.style.maxHeight = null;
-        content.style.paddingTop = null;
-      }
-    });
-  });
-});
+    const toast = document.createElement("div");
+    toast.className = `toast toast-${type}`;
+    toast.textContent = msg;
+    document.body.appendChild(toast);
 
-// ✅ أولاً: ربط زر Submit بعملية الإرسال إلى الـ API
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const payload = {
-    full_name: form.name.value,
-    id_number: form.idNumber.value,
-    gender: form.gender.value,
-    nationality: form.nationality.value,
-    email: form.email.value,
-    phone: form.phone.value,
-    address: form.address.value,
+    setTimeout(() => toast.remove(), 3000);
   };
 
-  try {
-    const response = await fetch("http://localhost:5000/api/data-entry", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+  /** ==========================
+   * Unified Fetch with Auth
+   * ========================== */
+  async function fetchWithAuth(url, { method = "GET", body = null } = {}) {
+    const token = localStorage.getItem("jwtToken");
+    if (!token) throw new Error("⚠️ يجب تسجيل الدخول أولاً");
 
-    if (response.ok) {
-      alert("✅ تم حفظ البيانات بنجاح!");
-      form.reset();
-    } else {
-      alert("❌ فشل الحفظ.");
-    }
-  } catch (error) {
-    console.error(error);
-    alert("❌ خطأ أثناء الاتصال بالخادم.");
-  }
-});
+    const headers = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    };
 
-// 📥 ثانياً: زر البحث Search
-
-document.getElementById("search").addEventListener("input", async (e) => {
-  const query = e.target.value.trim();
-  if (!query) return;
-
-  try {
-    const res = await fetch(`http://localhost:5000/api/data-entry/search?q=${encodeURIComponent(query)}`);
+    const res = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : null });
     const data = await res.json();
-
-    if (data.length > 0) {
-      const user = data[0];
-      form.idNumber.value = user.id_number;
-      form.name.value = user.full_name;
-      form.gender.value = user.gender;
-      form.nationality.value = user.nationality;
-      form.email.value = user.email;
-      form.phone.value = user.phone;
-      form.address.value = user.address;
-      form.dataset.id = user.id;
-    } else {
-      alert("لا توجد نتائج");
-    }
-  } catch (err) {
-    console.error(err);
+    if (!res.ok) throw new Error(data.message || "❌ خطأ في الاتصال بالخادم");
+    return data;
   }
-});
 
-// ✏️ ثالثاً: زر Edit (تعديل)
-
-document.querySelector(".btn-edit").addEventListener("click", async () => {
-  const id = form.dataset.id;
-  if (!id) return alert("🔍 ابحث عن سجل أولاً!");
-
-  const payload = {
-    full_name: form.name.value,
-    id_number: form.idNumber.value,
-    gender: form.gender.value,
-    nationality: form.nationality.value,
-    email: form.email.value,
-    phone: form.phone.value,
-    address: form.address.value,
-  };
-
-  try {
-    const response = await fetch(`http://localhost:5000/api/data-entry/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+  /** ==========================
+   * Collapsible Sections
+   * ========================== */
+  document.querySelectorAll('.collapsible').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      const content = btn.nextElementSibling;
+      btn.setAttribute('aria-expanded', (!expanded).toString());
+      content.style.maxHeight = !expanded ? content.scrollHeight + "px" : null;
+      content.style.paddingTop = !expanded ? "15px" : null;
     });
-
-    if (response.ok) {
-      alert("✅ تم التعديل بنجاح");
-    } else {
-      alert("❌ فشل التعديل");
-    }
-  } catch (err) {
-    console.error(err);
-  }
-});
-
-// 🗑️ رابعاً: زر Trash (حذف مؤقت)
-
-document.querySelector(".btn-delete").addEventListener("click", async () => {
-  const id = form.dataset.id;
-  if (!id) return alert("❗ ابحث عن سجل أولاً!");
-
-  if (!confirm("هل أنت متأكد أنك تريد حذف هذا السجل مؤقتًا؟")) return;
-
-  try {
-    const res = await fetch(`http://localhost:5000/api/data-entry/trash/${id}`, {
-      method: "DELETE",
-    });
-
-    if (res.ok) {
-      alert("🗑️ تم الحذف إلى سلة المهملات.");
-      form.reset();
-    } else {
-      alert("❌ فشل الحذف المؤقت.");
-    }
-  } catch (err) {
-    console.error(err);
-  }
-});
-
-// ♻️ خامساً: زر Restore (استرجاع)
-
-document.querySelector(".btn-restore").addEventListener("click", async () => {
-  const id = form.dataset.id;
-  if (!id) return alert("❗ ابحث عن سجل أولاً!");
-
-  try {
-    const res = await fetch(`http://localhost:5000/api/data-entry/restore/${id}`, {
-      method: "PATCH",
-    });
-
-    if (res.ok) {
-      alert("✅ تم استرجاع السجل");
-    } else {
-      alert("❌ فشل الاسترجاع");
-    }
-  } catch (err) {
-    console.error(err);
-  }
-});
-
-// ☠️ سادساً: حذف نهائي
-
-document.querySelector(".btn-delete-final").addEventListener("click", async () => {
-  const id = form.dataset.id;
-  if (!id) return alert("❗ ابحث عن سجل أولاً!");
-
-  if (!confirm("⚠️ سيتم حذف السجل نهائيًا. هل أنت متأكد؟")) return;
-
-  try {
-    const res = await fetch(`http://localhost:5000/api/data-entry/${id}`, {
-      method: "DELETE",
-    });
-
-    if (res.ok) {
-      alert("❌ تم الحذف النهائي.");
-      form.reset();
-    } else {
-      alert("❌ فشل الحذف النهائي.");
-    }
-  } catch (err) {
-    console.error(err);
-  }
-});
-
-///////////////////// آخر إضافة للـ Login ////////////////////////
-
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById('loginForm');
-  if (!form) return; // يتأكد إن الصفحة فيها هذا الفورم قبل تشغيل الكود
-
-  const emailInput = form.email;
-  const passwordInput = form.password;
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: emailInput.value.trim(),
-          password: passwordInput.value
-        })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        alert(data.message || 'Login failed');
-        return;
-      }
-
-      // ✅ حفظ الجلسة في localStorage
-      localStorage.setItem('userEmail', emailInput.value.trim());
-
-      alert('✅ Login successful!');
-      window.location.href = 'dashboard.html';
-    } catch (error) {
-      console.error('Error:', error);
-      alert('❌ Error connecting to server');
-    }
   });
+
+  /** ==========================
+   * Login Form
+   * ========================== */
+  const loginForm = document.getElementById("loginForm");
+  if (loginForm) {
+    loginForm.addEventListener("submit", async e => {
+      e.preventDefault();
+      const email = loginForm.email.value.trim();
+      const password = loginForm.password.value;
+
+      if (!email || !password) return showToast("يرجى ملء جميع الحقول", "error");
+
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+        if (!res.ok) return showToast(data.message || "فشل تسجيل الدخول", "error");
+
+        localStorage.setItem("jwtToken", data.token);
+        localStorage.setItem("userId", data.user?.id || "");
+        localStorage.setItem("userEmail", email);
+
+        showToast("✅ تم تسجيل الدخول بنجاح", "success");
+        setTimeout(() => window.location.href = "dashboard.html", 500);
+
+      } catch (err) {
+        console.error(err);
+        showToast("❌ حدث خطأ أثناء الاتصال بالخادم", "error");
+      }
+    });
+  }
+
+  /** ==========================
+   * Logout
+   * ========================== */
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userEmail");
+    showToast("✅ تم تسجيل الخروج", "success");
+    setTimeout(() => window.location.href = "login.html", 300);
+  });
+
+  /** ==========================
+   * Language Selector
+   * ========================== */
+  const langSelect = document.getElementById("language-select");
+  if (langSelect) {
+    const applyLanguage = (lang) => {
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+      document.body.style.textAlign = lang === "ar" ? "right" : "left";
+      localStorage.setItem("siteLang", lang);
+
+      document.querySelectorAll("[data-translate]").forEach(el => {
+        const key = el.getAttribute("data-translate");
+        if (translations[lang]?.[key]) {
+          // تحديث النصوص أو placeholders
+          if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+            el.placeholder = translations[lang][key];
+          } else {
+            el.textContent = translations[lang][key];
+          }
+        }
+      });
+    };
+
+    const savedLang = localStorage.getItem("siteLang") || (navigator.language.startsWith("ar") ? "ar" : "en");
+    langSelect.value = savedLang;
+    applyLanguage(savedLang);
+
+    langSelect.addEventListener("change", () => applyLanguage(langSelect.value));
+  }
+
+  /** ==========================
+   * Profile Page: Load User Data
+   * ========================== */
+  const profileForm = document.getElementById("profileForm");
+  if (profileForm) {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      showToast("⚠️ الرجاء تسجيل الدخول أولاً", "error");
+      setTimeout(() => window.location.href = "login.html", 500);
+    } else {
+      // تحميل بيانات المستخدم
+      fetchWithAuth(`http://localhost:5000/api/users/${userId}`)
+        .then(data => {
+          for (const key in data) {
+            if (profileForm[key]) profileForm[key].value = data[key];
+          }
+        })
+        .catch(err => showToast(err.message, "error"));
+
+      // Handle profile submit
+      profileForm.addEventListener("submit", async e => {
+        e.preventDefault();
+        const payload = {};
+        for (const input of profileForm.elements) {
+          if (input.name) payload[input.name] = input.value;
+        }
+
+        try {
+          await fetchWithAuth(`http://localhost:5000/api/users/${userId}`, { method: "PUT", body: payload });
+          showToast(translations[getUserLang()].recordUpdated, "success");
+        } catch (err) {
+          showToast(err.message, "error");
+        }
+      });
+    }
+  }
+
 });

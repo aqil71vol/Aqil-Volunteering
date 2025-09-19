@@ -1,56 +1,48 @@
+// aqil-volunteering/backend/controllers/authController.js
+const db = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const db = require('../config/db');
 
 exports.register = async (req, res) => {
-  const { name, email, password } = req.body;
-
   try {
-    // تحقق من وجود المستخدم
-    const [existing] = await db.query("SELECT * FROM users WHERE email = ?", [email]);
-    if (existing.length > 0) {
-      return res.status(400).json({ message: "البريد الإلكتروني موجود مسبقاً" });
-    }
+    const { full_name, email, password } = req.body;
+
+    // التحقق من وجود مستخدم بنفس الإيميل
+    const existingUser = await db.User.findOne({ where: { email } });
+    if (existingUser) return res.status(409).json({ message: 'Email already exists' });
 
     // تشفير كلمة المرور
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // إدخال المستخدم
-    await db.query("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", [
-      name,
+    const user = await db.User.create({
+      full_name,
       email,
-      hashedPassword,
-    ]);
+      password: hashedPassword,
+      last_ip: req.ip
+    });
 
-    res.status(201).json({ message: "تم إنشاء الحساب بنجاح" });
+    res.status(201).json({ message: 'User registered successfully', user });
   } catch (err) {
-    res.status(500).json({ message: "حدث خطأ أثناء التسجيل", error: err });
+    console.error(err);
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
 
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
-
   try {
-    const [rows] = await db.query("SELECT * FROM users WHERE email = ?", [email]);
-    if (rows.length === 0) {
-      return res.status(400).json({ message: "البريد الإلكتروني غير صحيح" });
-    }
+    const { email, password } = req.body;
 
-    const user = rows[0];
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) {
-      return res.status(400).json({ message: "كلمة المرور غير صحيحة" });
-    }
+    const user = await db.User.findOne({ where: { email } });
+    if (!user) return res.status(404).json({ message: 'User not found' });
 
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
-    res.json({ message: "تم تسجيل الدخول", token });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+    res.json({ message: 'Login successful', token, user });
   } catch (err) {
-    res.status(500).json({ message: "حدث خطأ أثناء تسجيل الدخول", error: err });
+    console.error(err);
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 };

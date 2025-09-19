@@ -1,3 +1,4 @@
+<!-- Aqil-Volunteering/frontend/publicjs/dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,10 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title data-translate="dashboard">Dashboard</title>
   <link rel="stylesheet" href="css/style.css" />
-  <!-- Font Awesome for social icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer" />
 </head>
 <body>
+  <!-- Header -->
   <header class="header">
     <div class="header-flex container">
       <h1 data-translate="dashboard">Dashboard</h1>
@@ -19,120 +23,70 @@
     </div>
   </header>
 
+  <!-- Main Content -->
   <main class="container">
+    <!-- Welcome card -->
     <div class="card">
-      <!-- <h3 data-translate="welcome">Welcome, Aqil!</h3> -->
-      <h3 id="welcome-msg" data-translate="welcome">Welcome!</h3>
-      <p data-translate="info">Here you can manage your volunteering projects, view applications, and more.</p>
+      <h3 id="welcome-msg">Welcome!</h3>
+      <p data-translate="info">
+        Here you can manage your volunteering projects, view applications, and more.
+      </p>
     </div>
 
+    <!-- Projects -->
     <div class="card">
       <h3 data-translate="projects">Your Projects</h3>
-      <p data-translate="projectsInfo">No projects created yet. Click to add a new one.</p>
+      <div class="projects-list">
+        <p data-translate="projectsInfo">No projects created yet. Click to add a new one.</p>
+      </div>
     </div>
 
+    <!-- Applications -->
     <div class="card">
       <h3 data-translate="applications">Volunteer Applications</h3>
       <p data-translate="applicationsInfo">No applications at the moment.</p>
     </div>
 
-    <div class="card">
-      <h3 data-translate="projects">Your Projects</h3>
-      <div class="projects-list"></div> <!-- ← هنا يتم عرض المشاريع -->
-    </div>
+    <!-- Media Section -->
+    <div class="section-divider"></div>
 
-
-    <!-- صور تعريفية -->
+    <!-- Images Section -->
     <section class="image-section">
-      <img src="assets/images/v.png" alt="Volunteering" class="main-image" />
-      <img src="assets/images/v0.png" alt="Volunteering_1" class="main-image" />
-      <img src="assets/images/v_2025.jpg" alt="Volunteering_2" class="main-image" />
+      <h2 data-translate="photos">Gallery</h2>
+      <div class="images">
+        <img src="assets/images/v.png" alt="Volunteering" class="main-image" />
+        <img src="assets/images/v0.png" alt="Volunteering_1" class="main-image" />
+        <img src="assets/images/v_2025.jpg" alt="Volunteering_2" class="main-image" />
+      </div>
     </section>
 
-    <!-- فيديو تعريفي -->
+    <div class="section-divider"></div>
+
+    <!-- Video Section -->
     <section class="video-section">
+      <h2 data-translate="video">Intro Video</h2>
       <video controls class="main-video" preload="metadata">
         <source src="assets/videos/OBS.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
     </section>
 
-       <!-- أزرار الانتقال الى صفحات اخرى -->
+    <div class="section-divider"></div>
+
+    <!-- Action Buttons -->
+    <h2 class="section-title" data-translate="buttons">Buttons</h2>
+
     <section class="actions">
       <a href="pages/thanks.html" class="btn" data-translate="thanks" target="_blank">Thanks</a>
       <a href="pages/lecture.html" class="btn" data-translate="lecture" target="_blank">Lecture</a>
       <a href="pages/training.html" class="btn" data-translate="training" target="_blank">Training</a>
-    </section>
-
-       <!-- أزرار التسجيل -->
-    <section class="actions">
-      <a href="pages/data_entry.html" class="btn" data-translate="data_entry" target="_blank">Data Entry</a>
+      <a href="pages/profile.html" class="btn" data-translate="profile" target="_blank">Profile</a>
     </section>
 
     <button id="logoutBtn" class="btn logout-btn">Logout</button>
-    <button id="logoutBtn">Logout</button>
-
-    <input type="text" id="searchBox" placeholder="🔍 ابحث بالاسم أو الرقم أو الهاتف" style="margin: 20px; padding: 5px;">
-    <input type="text" id="searchBox" placeholder="🔍 ابحث بالاسم أو الرقم أو الهاتف" style="margin: 20px; padding: 5px;">
-
-    <input
-    type="text"
-    id="searchInput"
-    placeholder="ابحث عن اسم، بريد، هاتف أو رقم بطاقة..."
-    oninput="debouncedSearch()"
-    />
-
-<select id="filterGender" onchange="applyFilters()">
-    <option value="">كل الأجناس</option>
-    <option value="male">ذكر</option>
-    <option value="female">أنثى</option>
-  </select>
-
-  <select id="filterNationality" onchange="applyFilters()">
-    <option value="">كل الجنسيات</option>
-    <!-- عبيها ديناميكياً أو يدوياً -->
-    <option value="Yemeni">Yemeni</option>
-    <option value="Iraqi">Iraqi</option>
-    <option value="Iraq">Iraq</option>
-  </select>
-
-  <button onclick="sortTable('full_name')">ترتيب حسب الاسم</button>
-  <button onclick="sortTable('created_at')">ترتيب حسب تاريخ الإدخال</button>
-
-  <h2>📋 بيانات المتطوعين</h2>
-  <table id="dataTable" border="1">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Full Name</th>
-        <th>ID Number</th>
-        <th>Gender</th>
-        <th>Nationality</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Address</th>
-        <th>Actions</th> <!-- جديد -->
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-<div id="createForm" style="border:1px solid #ccc; padding:10px; margin-top:20px;">
-  <h3>📝 إضافة سجل جديد</h3>
-  <input type="text" id="newFullName" placeholder="الاسم الكامل"><br>
-  <input type="text" id="newIdNumber" placeholder="رقم البطاقة"><br>
-  <input type="text" id="newGender" placeholder="الجنس"><br>
-  <input type="text" id="newNationality" placeholder="الجنسية"><br>
-  <input type="email" id="newEmail" placeholder="البريد الإلكتروني"><br>
-  <input type="text" id="newPhone" placeholder="الهاتف"><br>
-  <input type="text" id="newAddress" placeholder="العنوان"><br>
-  <button onclick="submitNew()">➕ إضافة</button>
-</div>
-
-
   </main>
 
-  <!-- الفوتر -->
+  <!-- Footer -->
   <footer class="footer">
     <div class="container social">
       <a id="fb-link" target="_blank" aria-label="Facebook" title="Facebook">
@@ -145,14 +99,14 @@
         <i class="fab fa-whatsapp fa-xl"></i>
       </a>
     </div>
-    <p id="copyright" class="copyright" data-translate="copyright">© 2025 Aqil. All rights reserved.</p>
+    <p id="copyright" class="copyright" data-translate="copyright">
+      © 2025 Aqil. All rights reserved.
+    </p>
   </footer>
 
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js" defer></script>
   <script src="js/translation.js" defer></script>
-  <script src="js/main.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/projects.js" defer></script>
   <script src="js/dashboard.js" defer></script>
-
 </body>
 </html>
