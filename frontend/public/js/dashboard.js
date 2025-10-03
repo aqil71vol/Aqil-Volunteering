@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ===== Projects =====
   const loadProjects = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/projects/user/${userId}`, {
+      const res = await fetch(`http://localhost:5000/api/project/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error("فشل تحميل المشاريع");

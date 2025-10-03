@@ -15,10 +15,14 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST,
     port: process.env.DB_PORT || 3306,
     dialect: 'mysql',
-    logging: console.log, // لإظهار الاستعلامات في الكونسول
+    logging: console.log, 
     define: {
-      timestamps: true,      // تفعيل createdAt و updatedAt
-      underscored: true,     // snake_case للأعمدة
+      timestamps: true,      
+      underscored: true,     
+    },
+    dialectOptions: {
+      charset: 'utf8mb4',
+      collate: 'utf8mb4_unicode_ci',
     },
     pool: {
       max: 10,
@@ -28,6 +32,7 @@ const sequelize = new Sequelize(
     },
   }
 );
+
 
 // =====================
 // 🔹 اختبار الاتصال

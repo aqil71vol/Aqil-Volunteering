@@ -38,7 +38,7 @@ exports.updateProject = async (req, res) => {
 exports.deleteProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const project = await db.Project.findByPk(id);
+    const project = await db.Skill.findByPk(id);
     if (!project) return res.status(404).json({ message: 'Project not found' });
 
     project.is_deleted = true;

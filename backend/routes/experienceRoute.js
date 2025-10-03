@@ -5,7 +5,7 @@ const experienceController = require('../controllers/experienceController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
 router.get('/:user_id', authMiddleware, experienceController.getExperiencesByUserId);
-router.post('/:user_id', authMiddleware, experienceController.createExperience);
+router.post('/', authMiddleware, experienceController.createExperience);
 router.put('/:id', authMiddleware, experienceController.updateExperience);
 router.delete('/:id', authMiddleware, experienceController.deleteExperience);
 

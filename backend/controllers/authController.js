@@ -5,23 +5,45 @@ const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
   try {
-    const { full_name, email, password } = req.body;
+    const { email, password } = req.body;
 
     // التحقق من وجود مستخدم بنفس الإيميل
     const existingUser = await db.User.findOne({ where: { email } });
-    if (existingUser) return res.status(409).json({ message: 'Email already exists' });
+    if (existingUser) {
+      return res.status(409).json({ message: 'Email already exists' });
+    }
 
     // تشفير كلمة المرور
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // إنشاء المستخدم
     const user = await db.User.create({
-      full_name,
       email,
       password: hashedPassword,
       last_ip: req.ip
     });
 
+    // إنشاء Info افتراضي للمستخدم الجديد
+    await db.Info.create({
+      user_id: user.id,
+      full_name: '',           // افتراضي فارغ
+      national_id: null,
+      mother_name: null,
+      dob: null,
+      gender: null,
+      nationality: null,
+      country: null,
+      previous_address: null,
+      current_address: null,
+      marital_status: null,
+      family_members: 0,
+      phone: null,
+      bio: null,
+      profile_image: null
+    });
+
     res.status(201).json({ message: 'User registered successfully', user });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error', error: err.message });

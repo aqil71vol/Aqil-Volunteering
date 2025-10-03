@@ -12,7 +12,7 @@ const languageRoute = require('./languageRoute');
 const projectRoute = require('./projectRoute');
 const trainingRoute = require('./trainingRoute');
 const fileRoute = require('./fileRoute');
-const archiveRoute = require('./userDataEntryArchiveRoute'); // إضافة راوتر الأرشيف
+const dataEntryRoute = require('./dataEntryRoute');
 
 // استخدام الراوترات
 router.use('/auth', authRoute);
@@ -24,6 +24,6 @@ router.use('/language', languageRoute);
 router.use('/project', projectRoute);
 router.use('/training', trainingRoute);
 router.use('/file', fileRoute);
-router.use('/archive', archiveRoute);                   // إضافة راوتر الأرشيف
+router.use('/data_entries', dataEntryRoute);
 
 module.exports = router;

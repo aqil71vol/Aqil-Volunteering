@@ -1,20 +1,38 @@
 /* aqil-volunteer/frontend/public/css/profile-style.css */
-/* =======================================================
-/* =======================================================
-   ======= Base ======= 
-======================================================= */
+/* ================================
+   Profile Page CSS (Enhanced)
+================================ */
+
+/* -------------------------------
+   Variables
+------------------------------- */
+:root {
+  --primary-color: #2e86de;
+  --primary-hover: #1b4f72;
+  --button-green: #4CAF50;
+  --button-green-hover: #45a049;
+  --bg-body: #f5f7fa;
+  --text-color-light: #fff;
+  --shadow-color: rgba(0,0,0,0.1);
+  --font-family: 'Segoe UI', sans-serif;
+}
+
+/* -------------------------------
+   Base Styles
+------------------------------- */
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #f5f7fa;
+  font-family: var(--font-family);
+  background: var(--bg-body);
   margin: 0;
   padding: 0;
+  color: #333;
 }
 
 .profile-header {
   text-align: center;
   padding: 1rem;
-  background: #2e86de;
-  color: #fff;
+  background: var(--primary-color);
+  color: var(--text-color-light);
 }
 
 .profile-top {
@@ -28,7 +46,7 @@ body {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  border: 3px solid #fff;
+  border: 3px solid var(--text-color-light);
   object-fit: cover;
 }
 
@@ -40,9 +58,9 @@ body {
   word-wrap: break-word;
 }
 
-/* ==========================
+/* -------------------------------
    Navigation Buttons
-========================== */
+------------------------------- */
 .profile-nav {
   display: flex;
   justify-content: center;
@@ -56,7 +74,7 @@ body {
   border: none;
   border-radius: 999px;
   background: #fff;
-  color: #2e86de;
+  color: var(--primary-color);
   cursor: pointer;
   transition: 0.3s;
   font-weight: 500;
@@ -64,13 +82,13 @@ body {
 
 .nav-btn.active,
 .nav-btn:hover {
-  background: #2e86de;
-  color: #fff;
+  background: var(--primary-color);
+  color: var(--text-color-light);
 }
 
-/* ==========================
+/* -------------------------------
    Main Container
-========================== */
+------------------------------- */
 .profile-main {
   width: 90%;
   max-width: 1200px;
@@ -82,14 +100,14 @@ body {
   padding: 1rem;
   margin-bottom: 1.5rem;
   border-radius: 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px var(--shadow-color);
 }
 
 .profile-section.hidden { display: none; }
 
-/* ==========================
+/* -------------------------------
    Input Groups
-========================== */
+------------------------------- */
 .input-group {
   position: relative;
   margin-bottom: 1rem;
@@ -110,7 +128,7 @@ body {
   width: 100%;
   max-width: 500px;
   min-width: 250px;
-  padding: 12px 15px 12px 40px; /* padding-left accommodates icon */
+  padding: 12px 15px 12px 40px; /* accommodates icon */
   border-radius: 999px;
   border: 1px solid #ccc;
   font-size: 1rem;
@@ -121,13 +139,13 @@ body {
 .input-group input:focus,
 .input-group select:focus,
 .input-group textarea:focus {
-  border-color: #2e86de;
+  border-color: var(--primary-color);
   box-shadow: 0 0 5px rgba(46, 134, 222, 0.3);
 }
 
 .input-group select {
-  height: 45px; /* match input height */
-  appearance: none; /* remove default arrow in some browsers */
+  height: 45px;
+  appearance: none;
 }
 
 .input-group textarea {
@@ -135,26 +153,26 @@ body {
   resize: vertical;
 }
 
-/* ==========================
+/* -------------------------------
    Buttons
-========================== */
+------------------------------- */
 .btn {
   padding: 10px 20px;
   border: none;
   border-radius: 999px;
-  background: #2e86de;
-  color: #fff;
+  background: var(--primary-color);
+  color: var(--text-color-light);
   cursor: pointer;
   transition: background 0.3s;
 }
 
 .btn:hover {
-  background: #1b4f72;
+  background: var(--primary-hover);
 }
 
-/* ==========================
+/* -------------------------------
    Card List
-========================== */
+------------------------------- */
 .card-list {
   display: flex;
   flex-direction: column;
@@ -165,7 +183,7 @@ body {
   background: #fff;
   border-radius: 15px;
   padding: 1rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px var(--shadow-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -177,7 +195,7 @@ body {
   font-size: 1.1rem;
   cursor: pointer;
   margin-left: 0.5rem;
-  color: #2e86de;
+  color: var(--primary-color);
   transition: color 0.3s;
 }
 
@@ -185,9 +203,6 @@ body {
   color: #e74c3c;
 }
 
-/* ==========================
-   Profile Image Centered Text
-========================== */
 .profile-img-container {
   position: relative;
   display: flex;
@@ -200,15 +215,15 @@ body {
   position: absolute;
   bottom: 0;
   font-size: 0.9rem;
-  color: #fff;
+  color: var(--text-color-light);
   background: rgba(0,0,0,0.4);
   padding: 2px 6px;
   border-radius: 10px;
 }
 
-/* ==========================
+/* -------------------------------
    Responsive
-========================== */
+------------------------------- */
 @media (max-width: 768px) {
   .input-group {
     flex-direction: column;
@@ -228,7 +243,9 @@ body {
   .profile-nav { flex-direction: column; align-items: center; }
 }
 
-/* Language Selector */
+/* -------------------------------
+   Language Selector
+------------------------------- */
 .lang-switcher {
   display: flex;
   justify-content: center;
@@ -239,7 +256,7 @@ body {
 
 .lang-switcher label {
   font-size: 1.1rem;
-  color: #fff;
+  color: var(--text-color-light);
 }
 
 .lang-switcher select {
@@ -247,7 +264,7 @@ body {
   border-radius: 20px;
   border: none;
   background-color: #fff;
-  color: #2e86de;
+  color: var(--primary-color);
   font-weight: 500;
   cursor: pointer;
   outline: none;
@@ -260,4 +277,53 @@ body {
 
 .lang-switcher select:focus {
   box-shadow: 0 0 5px rgba(46, 134, 222, 0.5);
+}
+
+/* -------------------------------
+   Export Buttons (CSV)
+------------------------------- */
+.export-buttons {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.export-buttons button {
+  background-color: var(--button-green);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.export-buttons button:hover {
+  background-color: var(--button-green-hover);
+  transform: translateY(-2px);
+}
+
+.export-buttons button:active {
+  transform: translateY(0);
+}
+
+.export-buttons button::before {
+  content: "⬇"; 
+  font-size: 16px;
+}
+
+/* -------------------------------
+   Accessibility: Focus Styles
+------------------------------- */
+.btn:focus-visible,
+.nav-btn:focus-visible,
+.input-group input:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
 }

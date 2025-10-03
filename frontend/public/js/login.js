@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('jwtToken', data.token);
       localStorage.setItem('userId', data.user?.id || "");
       localStorage.setItem('userEmail', email);
-      localStorage.setItem('full_name', data.user?.full_name || "");
 
       showToast("✅ Logged in successfully!", "success");
       setTimeout(() => window.location.href = 'dashboard.html', 1000);
@@ -51,4 +50,3 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.removeItem('logoutMessage');
   }
 });
-

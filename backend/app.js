@@ -25,26 +25,32 @@ const authMiddleware = require('./middlewares/authMiddleware');
 // =====================
 // استيراد الروتات
 // =====================
-const authRoutes = require('./api/auth');             // تسجيل دخول / تسجيل
-const userRoutes = require('./api/users');            // CRUD المستخدمين
-const experienceRoutes = require('./routes/experienceRoutes');
-const skillRoutes = require('./routes/skillRoutes');
-const languageRoutes = require('./routes/languageRoutes');
-const projectRoutes = require('./routes/projectRoutes');
-const fileRoutes = require('./routes/fileRoutes');
-const trainingRoutes = require('./routes/trainingRoutes');
+const authRoutes = require('./routes/authRoute');             
+const userRoutes = require('./routes/userRoute');            
+const infoRoutes = require('./routes/infoRoute');
+const experienceRoutes = require('./routes/experienceRoute');
+const skillRoutes = require('./routes/skillRoute');
+const languageRoutes = require('./routes/languageRoute');
+const projectRoutes = require('./routes/projectRoute');
+const trainingRoutes = require('./routes/trainingRoute');
+const fileRoutes = require('./routes/fileRoute');
+const dataEntryRoutes = require('./routes/userDataEntryRoute');
+const archiveRoutes = require('./routes/userDataEntryArchiveRoute');
 
 // =====================
-// ربط الروتات
+// ربط الروتات مع الحماية
 // =====================
 app.use('/api/auth', authRoutes);
-app.use('/api/users', authMiddleware, userRoutes);          // حماية JWT
-app.use('/api/experiences', authMiddleware, experienceRoutes);
-app.use('/api/skills', authMiddleware, skillRoutes);
-app.use('/api/languages', authMiddleware, languageRoutes);
-app.use('/api/projects', authMiddleware, projectRoutes);
-app.use('/api/files', authMiddleware, fileRoutes);
-app.use('/api/trainings', authMiddleware, trainingRoutes);
+app.use('/api/user', authMiddleware, userRoutes);          
+app.use('/api/info', authMiddleware, infoRoutes);
+app.use('/api/experience', authMiddleware, experienceRoutes);
+app.use('/api/skill', authMiddleware, skillRoutes);
+app.use('/api/language', authMiddleware, languageRoutes);
+app.use('/api/project', authMiddleware, projectRoutes);
+app.use('/api/training', authMiddleware, trainingRoutes);
+app.use('/api/file', authMiddleware, fileRoutes);
+app.use('/api/data-entry', authMiddleware, dataEntryRoutes);
+app.use('/api/archive', authMiddleware, archiveRoutes);
 
 // =====================
 // اختبار الاتصال بالقاعدة
@@ -54,14 +60,14 @@ db.sequelize.authenticate()
   .catch(err => console.error('❌ DB connection error:', err));
 
 // =====================
-// مزامنة الجداول (اختياري)
+// مزامنة الجداول
 // =====================
 db.sequelize.sync({ alter: true })
   .then(() => console.log('✅ All tables synced'))
   .catch(err => console.error('❌ Table sync error:', err));
 
 // =====================
-// السيرفر
+// تشغيل السيرفر
 // =====================
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

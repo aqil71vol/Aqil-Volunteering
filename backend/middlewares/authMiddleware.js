@@ -1,17 +1,29 @@
 // aqil-volunteering/backend/middlewares/authMiddleware.js
-module.exports = (req, res, next) => {
+const jwt = require('jsonwebtoken');
+
+const authMiddleware = (req, res, next) => {
   try {
-    // مثال بسيط: تحقق من وجود header Authorization
     const authHeader = req.headers.authorization;
-    if (!authHeader) return res.status(401).json({ message: 'Unauthorized' });
+    console.log("🔎 Incoming Authorization header:", authHeader); // 👈 للتأكد
 
-    // لو عندك JWT، يمكن إضافته هنا
-    // const token = authHeader.split(' ')[1];
-    // التحقق من صحة التوكن...
+    if (!authHeader) {
+      return res.status(401).json({ message: 'Unauthorized: No token provided' });
+    }
 
+    const parts = authHeader.split(' ');
+    if (parts.length !== 2 || parts[0] !== 'Bearer') {
+      return res.status(401).json({ message: 'Unauthorized: Invalid token format' });
+    }
+
+    const token = parts[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    req.user = decoded; // نضع بيانات المستخدم في req.user
     next();
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error', error: err.message });
+    console.error('JWT verification error:', err);
+    res.status(401).json({ message: 'Invalid token', error: err.message });
   }
 };
+
+module.exports = authMiddleware;

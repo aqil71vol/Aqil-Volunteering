@@ -8,7 +8,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
 router.get('/:user_id', authMiddleware, skillController.getSkillsByUserId);
 
 // CREATE new skill
-router.post('/:user_id', authMiddleware, skillController.createSkill);
+router.post('/', authMiddleware, skillController.createSkill);
 
 // UPDATE skill
 router.put('/:id', authMiddleware, skillController.updateSkill);

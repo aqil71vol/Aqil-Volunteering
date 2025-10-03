@@ -8,7 +8,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
 router.get('/:user_id', authMiddleware, trainingController.getTrainingsByUserId);
 
 // CREATE new training
-router.post('/:user_id', authMiddleware, trainingController.createTraining);
+router.post('/', authMiddleware, trainingController.createTraining);
 
 // UPDATE training
 router.put('/:id', authMiddleware, trainingController.updateTraining);

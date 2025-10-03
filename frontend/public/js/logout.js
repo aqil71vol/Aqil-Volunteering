@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.removeItem("jwtToken");
     localStorage.removeItem("userId");
     localStorage.removeItem("userEmail");
-    localStorage.removeItem("full_name");
     localStorage.setItem("logoutMessage", "✅ Successfully logged out");
     window.location.href = "login.html";
   });

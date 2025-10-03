@@ -8,7 +8,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
 router.get('/:user_id', authMiddleware, languageController.getLanguagesByUserId);
 
 // CREATE new language
-router.post('/:user_id', authMiddleware, languageController.createLanguage);
+router.post('/', authMiddleware, languageController.createLanguage);
 
 // UPDATE language
 router.put('/:id', authMiddleware, languageController.updateLanguage);

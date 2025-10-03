@@ -27,10 +27,15 @@ fs.readdirSync(__dirname)
     db[model.name] = model;
   });
 
-// تعريف العلاقات بين الموديلات
-const { User, Info, Experience, Skill, Language, Project, Training, File, UserDataEntryArchive } = db;
+// ربط الموديلات
+const { User, DataEntry, Info, Experience, Skill, Language, Project, Training, File } = db;
 
-User.hasOne(Info, { foreignKey: 'userId', as: 'info', onDelete: 'CASCADE' });
+// ربط DataEntry بالمستخدم
+User.hasMany(DataEntry, { foreignKey: 'userId', as: 'dataEntries', onDelete: 'CASCADE' });
+DataEntry.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
+// باقي العلاقات كما كانت
+User.hasOne(Info, { foreignKey: 'userId', as: 'infos', onDelete: 'CASCADE' });
 Info.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
 User.hasMany(Experience, { foreignKey: 'userId', as: 'experiences', onDelete: 'CASCADE' });
@@ -42,20 +47,15 @@ Skill.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 User.hasMany(Language, { foreignKey: 'userId', as: 'languages', onDelete: 'CASCADE' });
 Language.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
-User.hasMany(Project, { foreignKey: 'user_id', as: 'projects', onDelete: 'CASCADE' });
-Project.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+User.hasMany(Project, { foreignKey: 'userId', as: 'projects', onDelete: 'CASCADE' });
+Project.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
-User.hasMany(Training, { foreignKey: 'user_id', as: 'trainings', onDelete: 'CASCADE' });
-Training.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+User.hasMany(Training, { foreignKey: 'userId', as: 'trainings', onDelete: 'CASCADE' });
+Training.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
-User.hasMany(File, { foreignKey: 'user_id', as: 'files', onDelete: 'CASCADE' });
-File.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+User.hasMany(File, { foreignKey: 'userId', as: 'files', onDelete: 'CASCADE' });
+File.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
-// إضافة أرشيف البيانات
-User.hasMany(UserDataEntryArchive, { foreignKey: 'created_by_user_id', as: 'archivedEntries', onDelete: 'CASCADE' });
-UserDataEntryArchive.belongsTo(User, { foreignKey: 'created_by_user_id', as: 'user' });
-
-// تصدير Sequelize والموديلات
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 

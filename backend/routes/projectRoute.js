@@ -8,7 +8,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
 router.get('/:user_id', authMiddleware, projectController.getProjectsByUserId);
 
 // CREATE new project
-router.post('/:user_id', authMiddleware, projectController.createProject);
+router.post('/', authMiddleware, projectController.createProject);
 
 // UPDATE project
 router.put('/:id', authMiddleware, projectController.updateProject);

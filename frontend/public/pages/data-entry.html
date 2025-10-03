@@ -1,0 +1,169 @@
+<!-- aqil-volunteering/frontend/public/pages/data-entry.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-translate="data_entry">Data Entry</title>
+  <link rel="stylesheet" href="../css/data-entry-style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<header class="data-entry-header">
+  <div class="data-entry-top">
+    <img id="profileImage" src="/uploads/default.png" alt="User Photo" class="data-entry-img">
+    <h2 id="full_name_display">User Name</h2>
+  </div>
+
+  <div class="export-buttons">
+    <button id="downloadCSV" data-translate="download_csv_en">⬇ CSV</button>
+    <button id="previewPDF" data-translate="download_pdf_en">⬇ PDF</button>
+  </div>
+
+  <div class="lang-switcher">
+    <label for="language-select"><i class="fa fa-globe"></i></label>
+    <select id="language-select">
+      <option value="en">English</option>
+      <option value="ar">العربية</option>
+    </select>
+  </div>
+</header>
+
+<main class="data-entry-main">
+  <section id="entries-section" class="data-entry-section">
+    <h2 data-translate="data_entries">Data Entries</h2>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="" data-translate="search_placeholder">
+      <i class="fa fa-search search-icon"></i>
+    </div>
+
+    <form id="entryForm">
+      <input type="hidden" id="entry_id">
+      <input type="hidden" id="user_id">
+
+      <!-- جميع الحقول كما سبق -->
+      <div class="input-group">
+        <i class="fa fa-user icon"></i>
+        <input type="text" id="full_name" placeholder="Full Name" data-translate="full_name">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-envelope icon"></i>
+        <input type="email" id="email" placeholder="Email" data-translate="email">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-id-card icon"></i>
+        <input type="text" id="national_id" placeholder="National ID" data-translate="national_id">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-user-circle icon"></i>
+        <input type="text" id="mother_name" placeholder="Mother's Name" data-translate="mother_name">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-calendar icon"></i>
+        <input type="date" id="dob" data-translate="dob">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-venus-mars icon"></i>
+        <select id="gender">
+          <option value="" data-translate="select_gender">Select Gender</option>
+          <option value="Male" data-translate="male">Male</option>
+          <option value="Female" data-translate="female">Female</option>
+          <option value="Other" data-translate="other">Other</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <i class="fa fa-globe icon"></i>
+        <input type="text" id="nationality" placeholder="Nationality" data-translate="nationality">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-flag icon"></i>
+        <input type="text" id="country" placeholder="Country" data-translate="country">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-home icon"></i>
+        <input type="text" id="previous_address" placeholder="Previous Address" data-translate="previous_address">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-map-marker-alt icon"></i>
+        <input type="text" id="current_address" placeholder="Current Address" data-translate="current_address">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-heart icon"></i>
+        <select id="marital_status">
+          <option value="" data-translate="select_marital">Select Marital Status</option>
+          <option value="Single" data-translate="single">Single</option>
+          <option value="Married" data-translate="married">Married</option>
+          <option value="Divorced" data-translate="divorced">Divorced</option>
+          <option value="Widowed" data-translate="widowed">Widowed</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <i class="fa fa-users icon"></i>
+        <input type="number" id="family_members" placeholder="Number of Family Members" min="0" data-translate="family_members">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-mobile icon"></i>
+        <input type="text" id="mobile" placeholder="Mobile" data-translate="mobile">
+      </div>
+      <div class="input-group">
+        <i class="fa fa-phone icon"></i>
+        <input type="text" id="phone" placeholder="Phone" data-translate="phone">
+      </div>
+
+      <div class="input-group">
+        <i class="fa fa-info-circle icon"></i>
+        <textarea id="bio" placeholder="Bio" data-translate="bio"></textarea>
+      </div>
+      <div class="input-group">
+        <i class="fa fa-briefcase icon"></i>
+        <textarea id="experiences" placeholder="Experiences" data-translate="experience"></textarea>
+      </div>
+      <div class="input-group">
+        <i class="fa fa-graduation-cap icon"></i>
+        <textarea id="courses" placeholder="Courses" data-translate="courses"></textarea>
+      </div>
+      <div class="input-group">
+        <i class="fa fa-lightbulb icon"></i>
+        <textarea id="skills" placeholder="Skills" data-translate="skills"></textarea>
+      </div>
+      <div class="input-group">
+        <i class="fa fa-language icon"></i>
+        <textarea id="languages" placeholder="Languages" data-translate="languages"></textarea>
+      </div>
+
+      <button type="submit" class="btn" data-translate="save">Save</button>
+    </form>
+
+    <table class="entries-table">
+        <thead>
+  <tr>
+    <th data-translate="full_name">Full Name</th>
+    <th data-translate="email">Email</th>
+    <th data-translate="national_id">National ID</th>
+    <th data-translate="dob">Date of Birth</th>
+    <th data-translate="gender">Gender</th>
+    <th data-translate="nationality">Nationality</th>
+    <th data-translate="country">Country</th>
+    <th data-translate="previous_address">Previous Address</th>
+    <th data-translate="current_address">Current Address</th>
+    <th data-translate="mobile">Mobile</th>
+    <th data-translate="phone">Phone</th>
+    <th data-translate="actions">Actions</th>
+  </tr>
+</thead>
+
+      <tbody id="tableBody"></tbody>
+    </table>
+  </section>
+</main>
+
+<!-- Notification Toast -->
+<div id="notification" class="notification"></div>
+
+<script src="../js/translation.js" defer></script>
+<script src="../js/data-entry-script.js" defer></script>
+<script src="../js/toast.js" defer></script>
+</body>
+</html>

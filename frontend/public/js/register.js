@@ -18,13 +18,12 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
 
     // ===== Collect Form Values =====
-    const full_name = registerForm.full_name.value.trim();
     const email = registerForm.email.value.trim();
     const password = registerForm.password.value;
     const confirmPassword = registerForm.confirmPassword.value;
 
     // ===== Validation =====
-    if (!full_name || !email || !password || !confirmPassword) {
+    if (!email || !password || !confirmPassword) {
       return showToast("⚠️ Please fill all required fields", "error");
     }
 
@@ -37,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ full_name, email, password })
+        body: JSON.stringify({ email, password })
       });
 
       const data = await res.json();
@@ -50,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("jwtToken", data.token);
       localStorage.setItem("userId", data.user.id);
       localStorage.setItem("userEmail", data.user.email);
-      localStorage.setItem("full_name", data.user.full_name);
 
       showToast("✅ Registration successful! Redirecting...", "success");
 

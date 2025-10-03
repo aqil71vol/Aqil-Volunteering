@@ -4,93 +4,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const userId = localStorage.getItem("userId");
   const API_BASE = "http://localhost:5000/api";
 
-  if (!token || !userId) {
+  if (!token) {
     alert("⚠️ الرجاء تسجيل الدخول أولاً");
     window.location.href = "../login.html";
     return;
   }
 
   // -----------------------------
-  // تحميل البيانات الشخصية
-  // -----------------------------
-  const loadInfoData = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/info/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error("Failed to fetch personal info");
-      const data = await res.json();
-
-      document.getElementById("full_name").value = data.full_name || "";
-      document.getElementById("email").value = data.email || "";
-      document.getElementById("mother_name").value = data.mother_name || "";
-      document.getElementById("dob").value = data.dob || "";
-      document.getElementById("gender").value = data.gender || "";
-      document.getElementById("nationality").value = data.nationality || "";
-      document.getElementById("country").value = data.country || "";
-      document.getElementById("previous_address").value = data.previous_address || "";
-      document.getElementById("current_address").value = data.current_address || "";
-      document.getElementById("marital_status").value = data.marital_status || "";
-      document.getElementById("family_members").value = data.family_members || "";
-      document.getElementById("phone").value = data.phone || "";
-      document.getElementById("bio").value = data.bio || "";
-      if (data.profile_image) document.getElementById("profileImage").src = data.profile_image;
-      document.getElementById("full_name_display").innerText = data.full_name || "User Name";
-    } catch (err) {
-      console.error(err);
-      alert("❌ خطأ أثناء تحميل المعلومات الشخصية");
-    }
-  };
-
-  document.getElementById("personalForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const infoData = {
-      full_name: document.getElementById("full_name").value.trim(),
-      mother_name: document.getElementById("mother_name").value.trim(),
-      dob: document.getElementById("dob").value,
-      gender: document.getElementById("gender").value,
-      nationality: document.getElementById("nationality").value.trim(),
-      country: document.getElementById("country").value.trim(),
-      previous_address: document.getElementById("previous_address").value.trim(),
-      current_address: document.getElementById("current_address").value.trim(),
-      marital_status: document.getElementById("marital_status").value,
-      family_members: parseInt(document.getElementById("family_members").value) || 0,
-      phone: document.getElementById("phone").value.trim(),
-      bio: document.getElementById("bio").value.trim()
-    };
-
-    try {
-      const res = await fetch(`${API_BASE}/info/${userId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify(infoData)
-      });
-      if (!res.ok) throw new Error("Failed to update info");
-      const result = await res.json();
-      alert(`✅ ${result.message}`);
-      loadInfoData();
-    } catch (err) {
-      console.error(err);
-      alert("❌ خطأ أثناء حفظ المعلومات");
-    }
-  });
-
-  // -----------------------------
-  // التنقل بين الأقسام
-  // -----------------------------
-  const navButtons = document.querySelectorAll(".nav-btn");
-  navButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      navButtons.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-
-      document.querySelectorAll(".profile-section").forEach(sec => sec.classList.add("hidden"));
-      document.getElementById(btn.dataset.target).classList.remove("hidden");
-    });
-  });
-
-  // -----------------------------
-  // Helper لعمل fetch مع headers
+  // Helper function for API calls
   // -----------------------------
   const fetchAPI = async (url, options = {}) => {
     options.headers = { ...options.headers, Authorization: `Bearer ${token}` };
@@ -98,373 +19,367 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!res.ok) throw new Error(`API error: ${res.status}`);
     return await res.json();
   };
+ // -----------------------------
+  // PDF Export (Preview)
+  // -----------------------------
+  async function previewPDF(lang) {
+    const token = localStorage.getItem("jwtToken"); // أو المكان اللي بتخزن فيه التوكن
+
+    const res = await fetch(`${API_BASE}/export/cv/${lang}/preview`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    if (!res.ok) {
+      alert("❌ خطأ في تحميل الملف");
+      return;
+    }
+
+    // حول الاستجابة إلى Blob وافتحها
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+  }
+
+  document.getElementById("previewPdfAr").addEventListener("click", () => {
+    previewPDF("ar");
+  });
+
+  document.getElementById("previewPdfEn").addEventListener("click", () => {
+    previewPDF("en");
+  });
 
   // -----------------------------
-  // ---------- EXPERIENCE --------
+  // Load Personal Info
   // -----------------------------
-  const loadExperience = async () => {
+  const loadInfoData = async () => {
     try {
-      const data = await fetchAPI(`${API_BASE}/experience/${userId}`);
-      const container = document.getElementById("experience-list");
-      container.innerHTML = "";
-      data.forEach(exp => {
-        const div = document.createElement("div");
-        div.classList.add("card");
-        div.innerHTML = `
-          <strong>${exp.company_name} (${exp.start_date} - ${exp.end_date || 'Present'})</strong>
-          <p>${exp.role}</p>
-          <p>${exp.description || ''}</p>
-          <button class="edit-exp" data-id="${exp.id}"><i class="fa fa-edit"></i></button>
-          <button class="delete-exp" data-id="${exp.id}"><i class="fa fa-trash"></i></button>
-        `;
-        container.appendChild(div);
+      const data = await fetchAPI(`${API_BASE}/info/me`);
+      const fields = [
+        "national_id","full_name","mother_name","dob","gender","nationality",
+        "country","previous_address","current_address","marital_status","family_members",
+        "phone","bio"
+      ];
+      fields.forEach(f => {
+        const el = document.getElementById(f);
+        if (el) el.value = data[f] || "";
       });
 
-      // أزرار الحذف
-      container.querySelectorAll(".delete-exp").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          if (!confirm("هل تريد حذف الخبرة؟")) return;
-          try {
-            await fetchAPI(`${API_BASE}/experience/${btn.dataset.id}`, { method: "DELETE" });
-            alert("✅ تم الحذف");
-            loadExperience();
-          } catch (err) {
-            console.error(err);
-            alert("❌ خطأ أثناء الحذف");
-          }
-        });
-      });
+      // Profile Image
+      // عند تحميل بيانات المستخدم
+      const profileImgEl = document.getElementById("profileImage");
+      if (data.profile_image) {
+        profileImgEl.src = `http://localhost:5000${data.profile_image}`;
+      } else {
+        // صورة افتراضية لو ما في صورة
+        profileImgEl.src = "/uploads/profile_image/default.png";
+      }
 
-      // أزرار التعديل (يمكن فتح نافذة منبثقة أو استخدام prompt)
-      container.querySelectorAll(".edit-exp").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const expData = data.find(e => e.id == btn.dataset.id);
-          const role = prompt("Role", expData.role) || expData.role;
-          const company_name = prompt("Company Name", expData.company_name) || expData.company_name;
-          const description = prompt("Description", expData.description) || expData.description;
-
-          try {
-            await fetchAPI(`${API_BASE}/experience/${btn.dataset.id}`, {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ role, company_name, description })
-            });
-            alert("✅ تم التعديل");
-            loadExperience();
-          } catch (err) {
-            console.error(err);
-            alert("❌ خطأ أثناء التعديل");
-          }
-        });
-      });
-
+      document.getElementById("full_name_display").innerText = data.full_name || "اسم المستخدم";
     } catch (err) {
       console.error(err);
-      alert("❌ خطأ أثناء تحميل الخبرات");
+      alert("❌ خطأ أثناء تحميل المعلومات الشخصية");
     }
   };
 
-  document.getElementById("addExperience").addEventListener("click", async () => {
-    const role = prompt("Role:");
-    const company_name = prompt("Company Name:");
-    const start_date = prompt("Start Date (YYYY-MM-DD):");
-    const end_date = prompt("End Date (YYYY-MM-DD) or leave blank:");
-    const description = prompt("Description:");
+  // -----------------------------
+  // Save Personal Info & Profile Image
+  // -----------------------------
+  document.getElementById("personalForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("national_id", national_id.value.trim());
+    formData.append("full_name", full_name.value.trim());
+    formData.append("mother_name", mother_name.value.trim());
+    formData.append("dob", dob.value);
+    formData.append("gender", gender.value);
+    formData.append("nationality", nationality.value.trim());
+    formData.append("country", country.value.trim());
+    formData.append("previous_address", previous_address.value.trim());
+    formData.append("current_address", current_address.value.trim());
+    formData.append("marital_status", marital_status.value);
+    formData.append("family_members", parseInt(family_members.value) || 0);
+    formData.append("phone", phone.value.trim());
+    formData.append("bio", bio.value.trim());
+    if (profile_image.files[0]) formData.append("profile_image", profile_image.files[0]);
 
     try {
-      await fetchAPI(`${API_BASE}/experience/${userId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role, company_name, start_date, end_date, description })
-      });
-      alert("✅ تم الإضافة");
-      loadExperience();
+  const res = await fetch(`${API_BASE}/info/me`, {
+  method: "PUT",
+  headers: { Authorization: `Bearer ${token}` },
+  body: formData
+});
+const result = await res.json();
+alert(`✅ ${result.message}`);
+
+// تحديث الصورة فورياً بعد رفعها
+if (profile_image.files[0]) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const imgEl = document.getElementById("profileImage");
+    imgEl.src = e.target.result;
+  };
+  reader.readAsDataURL(profile_image.files[0]);
+}
+
+loadInfoData();
+
     } catch (err) {
       console.error(err);
-      alert("❌ خطأ أثناء الإضافة");
+      alert("❌ خطأ أثناء حفظ المعلومات الشخصية");
     }
   });
-
+  
   // -----------------------------
-  // ---------- PROJECTS ----------
+  // Upload & List User Files
   // -----------------------------
-  const loadProjects = async () => {
+  const loadMyFiles = async () => {
     try {
-      const data = await fetchAPI(`${API_BASE}/project/${userId}`);
-      const container = document.getElementById("projects-list");
+      const files = await fetchAPI(`${API_BASE}/file`);
+      const container = document.getElementById("documents-list");
       container.innerHTML = "";
-      data.forEach(proj => {
-        const div = document.createElement("div");
-        div.classList.add("card");
-        div.innerHTML = `
-          <strong>${proj.project_name} (${proj.start_date} - ${proj.end_date || 'Present'})</strong>
-          <p>${proj.role}</p>
-          <p>${proj.description || ''}</p>
-          <button class="edit-proj" data-id="${proj.id}"><i class="fa fa-edit"></i></button>
-          <button class="delete-proj" data-id="${proj.id}"><i class="fa fa-trash"></i></button>
+
+      files.forEach(f => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>${f.file_name}</td>
+          <td>${f.file_type}</td>
+          <td>${Math.round(f.size/1024)}</td>
+          <td>${f.category || "-"}</td>
+          <td>${new Date(f.created_at).toLocaleString()}</td>
+          <td>
+            <button class="delete-soft" data-id="${f.id}">Soft Delete</button>
+            <button class="delete-hard" data-id="${f.id}">Hard Delete</button>
+          </td>
         `;
-        container.appendChild(div);
-      });
 
-      container.querySelectorAll(".delete-proj").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          if (!confirm("هل تريد حذف المشروع؟")) return;
-          try {
-            await fetchAPI(`${API_BASE}/project/${btn.dataset.id}`, { method: "DELETE" });
-            alert("✅ تم الحذف");
-            loadProjects();
-          } catch (err) { console.error(err); alert("❌ خطأ أثناء الحذف"); }
+        container.appendChild(tr);
+
+        // Soft Delete
+        tr.querySelector(".delete-soft").addEventListener("click", async () => {
+          if (!confirm("Do you want to temporarily delete the file?")) return;
+          await fetchAPI(`${API_BASE}/file/${f.id}?mode=soft`, { method: "DELETE" });
+          tr.remove();
+        });
+
+        // Hard Delete
+        tr.querySelector(".delete-hard").addEventListener("click", async () => {
+          if (!confirm("Do you want to delete the file permanently?")) return;
+          await fetchAPI(`${API_BASE}/file/${f.id}?mode=hard`, { method: "DELETE" });
+          tr.remove();
         });
       });
-
-      container.querySelectorAll(".edit-proj").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const projData = data.find(p => p.id == btn.dataset.id);
-          const project_name = prompt("Project Name", projData.project_name) || projData.project_name;
-          const role = prompt("Role", projData.role) || projData.role;
-          const description = prompt("Description", projData.description) || projData.description;
-
-          try {
-            await fetchAPI(`${API_BASE}/project/${btn.dataset.id}`, {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ project_name, role, description })
-            });
-            alert("✅ تم التعديل");
-            loadProjects();
-          } catch (err) { console.error(err); alert("❌ خطأ أثناء التعديل"); }
-        });
-      });
-
-    } catch (err) { console.error(err); alert("❌ خطأ أثناء تحميل المشاريع"); }
+    } catch (err) {
+      console.error("Error loading files:", err);
+      alert("❌ Error loading files");
+    }
   };
 
-  document.getElementById("addProject").addEventListener("click", async () => {
-    const project_name = prompt("Project Name:");
-    const role = prompt("Role:");
-    const description = prompt("Description:");
-    const start_date = prompt("Start Date (YYYY-MM-DD):");
-    const end_date = prompt("End Date (YYYY-MM-DD) or leave blank:");
-
-    try {
-      await fetchAPI(`${API_BASE}/project/${userId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ project_name, role, start_date, end_date, description })
-      });
-      alert("✅ تم الإضافة");
-      loadProjects();
-    } catch (err) { console.error(err); alert("❌ خطأ أثناء الإضافة"); }
-  });
-
-  // -----------------------------
-  // ---------- TRAININGS ---------
-  // -----------------------------
-  const loadTrainings = async () => {
-    try {
-      const data = await fetchAPI(`${API_BASE}/training/${userId}`);
-      const container = document.getElementById("courses-list");
-      container.innerHTML = "";
-      data.forEach(t => {
-        const div = document.createElement("div");
-        div.classList.add("card");
-        div.innerHTML = `
-          <strong>${t.title} (${t.date})</strong>
-          <p>${t.organization}</p>
-          <p>${t.description || ''}</p>
-          <button class="edit-training" data-id="${t.id}"><i class="fa fa-edit"></i></button>
-          <button class="delete-training" data-id="${t.id}"><i class="fa fa-trash"></i></button>
-        `;
-        container.appendChild(div);
-      });
-
-      container.querySelectorAll(".delete-training").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          if (!confirm("هل تريد حذف الدورة؟")) return;
-          try { await fetchAPI(`${API_BASE}/training/${btn.dataset.id}`, { method: "DELETE" }); loadTrainings(); alert("✅ تم الحذف"); }
-          catch (err) { console.error(err); alert("❌ خطأ أثناء الحذف"); }
-        });
-      });
-
-      container.querySelectorAll(".edit-training").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const tData = data.find(t => t.id == btn.dataset.id);
-          const title = prompt("Title", tData.title) || tData.title;
-          const organization = prompt("Organization", tData.organization) || tData.organization;
-          const description = prompt("Description", tData.description) || tData.description;
-          try {
-            await fetchAPI(`${API_BASE}/training/${btn.dataset.id}`, {
-              method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title, organization, description })
-            });
-            loadTrainings();
-            alert("✅ تم التعديل");
-          } catch (err) { console.error(err); alert("❌ خطأ أثناء التعديل"); }
-        });
-      });
-
-    } catch (err) { console.error(err); alert("❌ خطأ أثناء تحميل الدورات"); }
-  };
-
-  document.getElementById("addCourse").addEventListener("click", async () => {
-    const title = prompt("Title:");
-    const organization = prompt("Organization:");
-    const date = prompt("Date (YYYY-MM-DD):");
-    const description = prompt("Description:");
-    try {
-      await fetchAPI(`${API_BASE}/training/${userId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, organization, date, description })
-      });
-      loadTrainings();
-      alert("✅ تم الإضافة");
-    } catch (err) { console.error(err); alert("❌ خطأ أثناء الإضافة"); }
-  });
-
-  // -----------------------------
-  // ---------- SKILLS -----------
-  // -----------------------------
-  const loadSkills = async () => {
-    try {
-      const data = await fetchAPI(`${API_BASE}/skill/${userId}`);
-      const container = document.getElementById("skills-list");
-      container.innerHTML = "";
-      data.forEach(skill => {
-        const div = document.createElement("div");
-        div.classList.add("card");
-        div.innerHTML = `
-          <strong>${skill.skill_name}</strong> (${skill.level}) - ${skill.type}
-          <button class="edit-skill" data-id="${skill.id}"><i class="fa fa-edit"></i></button>
-          <button class="delete-skill" data-id="${skill.id}"><i class="fa fa-trash"></i></button>
-        `;
-        container.appendChild(div);
-      });
-
-      container.querySelectorAll(".delete-skill").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          if (!confirm("هل تريد حذف المهارة؟")) return;
-          try { await fetchAPI(`${API_BASE}/skill/${btn.dataset.id}`, { method: "DELETE" }); loadSkills(); alert("✅ تم الحذف"); }
-          catch (err) { console.error(err); alert("❌ خطأ أثناء الحذف"); }
-        });
-      });
-
-      container.querySelectorAll(".edit-skill").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const sData = data.find(s => s.id == btn.dataset.id);
-          const skill_name = prompt("Skill Name", sData.skill_name) || sData.skill_name;
-          const level = prompt("Level", sData.level) || sData.level;
-          const type = prompt("Type", sData.type) || sData.type;
-          try {
-            await fetchAPI(`${API_BASE}/skill/${btn.dataset.id}`, {
-              method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ skill_name, level, type })
-            });
-            loadSkills();
-            alert("✅ تم التعديل");
-          } catch (err) { console.error(err); alert("❌ خطأ أثناء التعديل"); }
-        });
-      });
-
-    } catch (err) { console.error(err); alert("❌ خطأ أثناء تحميل المهارات"); }
-  };
-
-  document.getElementById("addSkill").addEventListener("click", async () => {
-    const skill_name = prompt("Skill Name:");
-    const level = prompt("Level:");
-    const type = prompt("Type:");
-    try {
-      await fetchAPI(`${API_BASE}/skill/${userId}`, {
-        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ skill_name, level, type })
-      });
-      loadSkills();
-      alert("✅ تم الإضافة");
-    } catch (err) { console.error(err); alert("❌ خطأ أثناء الإضافة"); }
-  });
-
-  // -----------------------------
-  // ---------- LANGUAGES -------
-  // -----------------------------
-  const loadLanguages = async () => {
-    try {
-      const data = await fetchAPI(`${API_BASE}/language/${userId}`);
-      const container = document.getElementById("languages-list");
-      container.innerHTML = "";
-      data.forEach(lang => {
-        const div = document.createElement("div");
-        div.classList.add("card");
-        div.innerHTML = `
-          <strong>${lang.language}</strong> (${lang.proficiency})
-          <button class="edit-lang" data-id="${lang.id}"><i class="fa fa-edit"></i></button>
-          <button class="delete-lang" data-id="${lang.id}"><i class="fa fa-trash"></i></button>
-        `;
-        container.appendChild(div);
-      });
-
-      container.querySelectorAll(".delete-lang").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          if (!confirm("هل تريد حذف اللغة؟")) return;
-          try { await fetchAPI(`${API_BASE}/language/${btn.dataset.id}`, { method: "DELETE" }); loadLanguages(); alert("✅ تم الحذف"); }
-          catch (err) { console.error(err); alert("❌ خطأ أثناء الحذف"); }
-        });
-      });
-
-      container.querySelectorAll(".edit-lang").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const lData = data.find(l => l.id == btn.dataset.id);
-          const language = prompt("Language", lData.language) || lData.language;
-          const proficiency = prompt("Proficiency", lData.proficiency) || lData.proficiency;
-          try {
-            await fetchAPI(`${API_BASE}/language/${btn.dataset.id}`, {
-              method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ language, proficiency })
-            });
-            loadLanguages();
-            alert("✅ تم التعديل");
-          } catch (err) { console.error(err); alert("❌ خطأ أثناء التعديل"); }
-        });
-      });
-
-    } catch (err) { console.error(err); alert("❌ خطأ أثناء تحميل اللغات"); }
-  };
-
-  document.getElementById("addLanguage").addEventListener("click", async () => {
-    const language = prompt("Language:");
-    const proficiency = prompt("Proficiency:");
-    try {
-      await fetchAPI(`${API_BASE}/language/${userId}`, {
-        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ language, proficiency })
-      });
-      loadLanguages();
-      alert("✅ تم الإضافة");
-    } catch (err) { console.error(err); alert("❌ خطأ أثناء الإضافة"); }
-  });
-
-  // -----------------------------
-  // ---------- PROFILE PHOTO -----
-  // -----------------------------
-  document.getElementById("savePhoto").addEventListener("click", async () => {
-    const fileInput = document.getElementById("photoUpload");
-    if (!fileInput.files.length) { alert("اختر صورة أولاً"); return; }
+  document.getElementById("saveDoc").addEventListener("click", async () => {
+    const fileInput = document.getElementById("docUpload");
+    if (!fileInput.files.length) { alert("الرجاء اختيار ملف واحد على الأقل"); return; }
 
     const formData = new FormData();
-    formData.append("file", fileInput.files[0]);
+    Array.from(fileInput.files).forEach(file => formData.append("file", file));
 
     try {
-      const res = await fetch(`${API_BASE}/file/${userId}`, {
+      const res = await fetch(`${API_BASE}/file`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData
       });
-      if (!res.ok) throw new Error("Failed to upload photo");
+      if (!res.ok) throw new Error("فشل رفع الملف");
       const result = await res.json();
-      document.getElementById("profileImage").src = result.file.file_path;
-      alert("✅ تم تحديث الصورة");
+      alert("✅ تم رفع الملف بنجاح");
+      loadMyFiles();
     } catch (err) {
       console.error(err);
-      alert("❌ خطأ أثناء رفع الصورة");
+      alert("❌ خطأ أثناء رفع الملف");
     }
   });
 
   // -----------------------------
-  // Load all sections initially
+  // Navigation
+  // -----------------------------
+  document.querySelectorAll(".nav-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll(".profile-section").forEach(sec => sec.classList.add("hidden"));
+      document.getElementById(btn.dataset.target).classList.remove("hidden");
+    });
+  });
+
+  // -----------------------------
+  // Generic section loader (Experience, Projects, Skills...)
+  // -----------------------------
+  const createCard = (titleHTML, actionsHTML) => {
+    const div = document.createElement("div");
+    div.classList.add("card-item");
+    div.style.display = "flex";
+    div.style.justifyContent = "space-between";
+    div.style.alignItems = "center";
+    div.style.marginBottom = "8px";
+    div.style.direction = "rtl";
+    div.innerHTML = titleHTML + actionsHTML;
+    return div;
+  };
+
+  const handleListSection = (containerId, apiEndpoint, fields, itemLabels) => {
+    const container = document.getElementById(containerId);
+    const load = async () => {
+      try {
+        const data = await fetchAPI(`${API_BASE}/${apiEndpoint}/${userId}`);
+        container.innerHTML = "";
+        data.forEach(item => {
+          const titleHTML = `<strong>${itemLabels.map(f => item[f]).join(" - ")}</strong>`;
+          const actionsHTML = `
+            <button class="edit-item" data-id="${item.id}"><i class="fa fa-edit"></i></button>
+            <button class="delete-item" data-id="${item.id}"><i class="fa fa-trash"></i></button>
+          `;
+          container.appendChild(createCard(titleHTML, actionsHTML));
+        });
+
+        // Delete
+        container.querySelectorAll(".delete-item").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            if (!confirm("هل تريد الحذف؟")) return;
+            try {
+              await fetchAPI(`${API_BASE}/${apiEndpoint}/${btn.dataset.id}`, { method: "DELETE" });
+              btn.closest(".card-item").remove();
+              alert("✅ تم الحذف");
+            } catch (err) { console.error(err); alert("❌ خطأ أثناء الحذف"); }
+          });
+        });
+
+        // Edit
+        container.querySelectorAll(".edit-item").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const itemData = data.find(d => d.id == btn.dataset.id);
+            const updatedData = {};
+
+            for (const f of fields) {
+              let value;
+
+              if (f === "start_date" || f === "end_date") {
+                value = prompt(`أدخل ${f} (YYYY-MM-DD)`, itemData[f] || new Date().toISOString().slice(0,10));
+              } else if (f === "is_current" || f === "is_ongoing") {
+                const options = ["true","false"];
+                value = prompt(`أدخل ${f} (${options.join("/")})`, itemData[f] ? "true" : "false");
+                value = (value.toLowerCase() === "true");
+              } else if (f === "level") {
+                const options = ["Beginner","Intermediate","Advanced","Expert"];
+                value = prompt(`أدخل ${f} (${options.join("/")})`, itemData[f] || options[0]);
+              } else if (f === "type") {
+                const options = ["Skill","Hobby"];
+                value = prompt(`أدخل ${f} (${options.join("/")})`, itemData[f] || options[0]);
+              } else if (f === "proficiency") {
+                const options = ["Basic","Intermediate","Fluent","Native"];
+                value = prompt(`أدخل ${f} (${options.join("/")})`, itemData[f] || options[0]);
+              } else if (f === "category") {
+                const options = ["Profile","Document","Project","Other"];
+                value = prompt(`أدخل ${f} (${options.join("/")})`, itemData[f] || options[0]);
+              } else if (f === "certificate_url") {
+                value = prompt(`أدخل ${f}`, itemData[f] || "https://");
+              } else if (f === "project_url") {
+                value = prompt(`أدخل ${f}`, itemData[f] || "https://");
+              } else {
+                value = prompt(`أدخل ${f}`, itemData[f] || "");
+              }
+
+              if (value === null) return;
+              updatedData[f] = value;
+            }
+
+            try {
+              await fetchAPI(`${API_BASE}/${apiEndpoint}/${btn.dataset.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedData)
+              });
+              load();
+              alert("✅ تم التعديل");
+            } catch (err) { console.error(err); alert("❌ خطأ أثناء التعديل"); }
+          });
+        });
+      } catch (err) { console.error(err); alert(`❌ خطأ أثناء تحميل ${containerId}`); }
+    };
+    return load;
+  };
+
+  // -----------------------------
+  // Section loaders
+  // -----------------------------
+  const loadExperience = handleListSection("experience-list", "experience", ["job_title","company_name","location","start_date","end_date","description","is_current"], ["job_title","company_name","start_date","end_date"]);
+  const loadProjects = handleListSection("projects-list", "project", ["project_name","role","description","technologies","start_date","end_date","project_url","is_ongoing"], ["project_name","role","start_date","end_date"]);
+  const loadTrainings = handleListSection("courses-list", "training", ["course_name","provider","certificate_url","start_date","end_date","description"], ["course_name","provider","start_date","end_date"]);
+  const loadSkills = handleListSection("skills-list", "skill", ["skill_name","level","type"], ["skill_name","level","type"]);
+  const loadLanguages = handleListSection("languages-list", "language", ["language","proficiency"], ["language","proficiency"]);
+
+  // -----------------------------
+  // Add buttons
+  // -----------------------------
+  const attachAddButton = (btnId, fields, apiEndpoint, reloadFunc) => {
+    document.getElementById(btnId).addEventListener("click", async () => {
+      const newData = {};
+      for (const f of fields) {
+        let value;
+
+        if (f === "start_date" || f === "end_date") {
+          value = prompt(`أدخل ${f} (YYYY-MM-DD)`, new Date().toISOString().slice(0,10));
+        } else if (f === "is_current" || f === "is_ongoing") {
+          const options = ["true","false"];
+          value = prompt(`أدخل ${f} (${options.join("/")})`, options[0]);
+          value = (value.toLowerCase() === "true");
+        } else if (f === "level") {
+          const options = ["Beginner","Intermediate","Advanced","Expert"];
+          value = prompt(`أدخل ${f} (${options.join("/")})`, options[0]);
+        } else if (f === "type") {
+          const options = ["Skill","Hobby"];
+          value = prompt(`أدخل ${f} (${options.join("/")})`, options[0]);
+        } else if (f === "proficiency") {
+          const options = ["Basic","Intermediate","Fluent","Native"];
+          value = prompt(`أدخل ${f} (${options.join("/")})`, options[0]);
+        } else if (f === "category") {
+          const options = ["Profile","Document","Project","Other"];
+          value = prompt(`أدخل ${f} (${options.join("/")})`, options[0]);
+        } else if (f === "certificate_url" || f === "project_url") {
+          value = prompt(`أدخل ${f}`, "https://");
+        } else {
+          value = prompt(`أدخل ${f}`, "");
+        }
+
+        if (value === null) return;
+        newData[f] = value;
+      }
+
+      newData.user_id = userId;
+      try {
+        await fetchAPI(`${API_BASE}/${apiEndpoint}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newData)
+        });
+        reloadFunc();
+        alert("✅ تمت الإضافة");
+      } catch (err) {
+        console.error(err);
+        alert("❌ خطأ أثناء الإضافة");
+      }
+    });
+  };
+
+  attachAddButton("addExperience", ["job_title","company_name","location","start_date","end_date","description","is_current"], "experience", loadExperience);
+  attachAddButton("addProject", ["project_name","role","description","technologies","start_date","end_date","project_url","is_ongoing"], "project", loadProjects);
+  attachAddButton("addCourse", ["course_name","provider","certificate_url","start_date","end_date","description"], "training", loadTrainings);
+  attachAddButton("addSkill", ["skill_name","level","type"], "skill", loadSkills);
+  attachAddButton("addLanguage", ["language","proficiency"], "language", loadLanguages);
+
+  // -----------------------------
+  // Initialize all
   // -----------------------------
   loadInfoData();
   loadExperience();
@@ -472,4 +387,5 @@ document.addEventListener("DOMContentLoaded", () => {
   loadTrainings();
   loadSkills();
   loadLanguages();
+  loadMyFiles();
 });
