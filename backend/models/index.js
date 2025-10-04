@@ -2,20 +2,24 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config();
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT || 3306,
-    dialect: 'mysql',
-    logging: false,
-    define: { timestamps: true, underscored: true },
-  }
-);
+// require('dotenv').config();
+
+
+// const sequelize = new Sequelize(
+//   process.env.DB_NAME,
+//   process.env.DB_USER,
+//   process.env.DB_PASSWORD,
+//   {
+//     host: process.env.DB_HOST,
+//     port: process.env.DB_PORT || 3306,
+//     dialect: 'mysql',
+//     logging: false,
+//     define: { timestamps: true, underscored: true },
+//   }
+// );
+
+const sequelize = require('../config/db'); // الاتصال الجاهز من db.js
 
 const db = {};
 
@@ -57,6 +61,7 @@ User.hasMany(File, { foreignKey: 'userId', as: 'files', onDelete: 'CASCADE' });
 File.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
 db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+
+db.Sequelize = sequelize.Sequelize || require('sequelize');
 
 module.exports = db;

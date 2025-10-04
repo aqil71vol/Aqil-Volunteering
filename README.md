@@ -1,3 +1,22 @@
+
+# 🌍 Aqil Volunteering Project
+
+[![Node.js](https://img.shields.io/badge/Node.js-18.x-green?logo=node.js)](https://nodejs.org/)
+[![React](https://img.shields.io/badge/React-18-blue?logo=react)](https://react.dev/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-blue?logo=mysql)](https://www.mysql.com/)
+[![GitHub](https://img.shields.io/badge/GitHub-Repo-black?logo=github)](https://github.com/aqil71vol/Aqil-Volunteering)
+[![NPM](https://img.shields.io/badge/npm-9.0-red?logo=npm)](https://www.npmjs.com/)
+
+---
+
+## 📸 لقطة شاشة من المشروع
+ضع هنا صورة للواجهة، مثال:
+![Screenshot](frontend/public/assets/images/screenshot.png)
+
+---
+
+## 🗂 هيكل مشروع الـ Backend
+
 backend/
 ├─ config/
 │  └─ db.js                     # إعداد قاعدة البيانات (MySQL + Sequelize)

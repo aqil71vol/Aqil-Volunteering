@@ -2,6 +2,17 @@
 const express = require('express');
 const router = express.Router();
 
+const cors = require('cors');
+
+// إضافة CORS لجميع الراوترات
+router.use(cors());
+
+// إضافة middleware لفحص ال JWT أو أي شيء عام
+router.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
+
 // استدعاء كل الراوترات
 const authRoute = require('./authRoute');
 const userRoute = require('./userRoute');               // مفرد بعد التحديث

@@ -2,7 +2,8 @@
 const { Sequelize } = require('sequelize');
 const dotenv = require('dotenv');
 
-dotenv.config();
+// dotenv.config();
+dotenv.config({ path: process.env.ENV_PATH || '.env.local' });
 
 // =====================
 // 🔹 إنشاء اتصال Sequelize
@@ -18,11 +19,12 @@ const sequelize = new Sequelize(
     logging: console.log, 
     define: {
       timestamps: true,      
-      underscored: true,     
+      underscored: true,
+      collate: 'utf8mb4_unicode_ci',    
     },
     dialectOptions: {
       charset: 'utf8mb4',
-      collate: 'utf8mb4_unicode_ci',
+      // collate: 'utf8mb4_unicode_ci',
     },
     pool: {
       max: 10,

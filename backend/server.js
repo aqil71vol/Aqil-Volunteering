@@ -1,5 +1,10 @@
 // aqil-volunteering/backend/server.js
-require('dotenv').config();
+
+// require('dotenv').config();
+const dotenv = require('dotenv');
+dotenv.config({ path: process.env.ENV_PATH || '.env.local' });
+
+
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
