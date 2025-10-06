@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     user_id: {  // مطابق للقاعدة
       type: DataTypes.INTEGER,
       allowNull: false,
+      field: 'user_id'   // 🔑 يخلي Sequelize يستخدم نفس اسم العمود
     },
     full_name: { type: DataTypes.STRING },
     email: { type: DataTypes.STRING },
@@ -30,8 +31,8 @@ module.exports = (sequelize, DataTypes) => {
     skills: { type: DataTypes.TEXT },
     languages: { type: DataTypes.TEXT },
     last_ip: { type: DataTypes.STRING },
-    is_deleted: { type: DataTypes.BOOLEAN, defaultValue: false },
     deleted_at: { type: DataTypes.DATE, allowNull: true },
+    is_deleted: { type: DataTypes.BOOLEAN, defaultValue: false },
     created_by_name: { type: DataTypes.STRING }, // اسم المستخدم الذي أنشأ السجل
   }, {
     tableName: 'user_data_entries',
@@ -43,7 +44,11 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   DataEntry.associate = (models) => {
-    DataEntry.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+    DataEntry.belongsTo(models.User, { 
+      foreignKey: 'user_id',   // اسم العمود الصحيح
+      targetKey: 'id',
+      as: 'user'
+    });
   };
 
   return DataEntry;

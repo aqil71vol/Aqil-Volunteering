@@ -3,9 +3,9 @@
 -- ==================================================
 
 -- 1️⃣ إنشاء قاعدة البيانات
-DROP DATABASE IF EXISTS aqil_db;
-CREATE DATABASE aqil_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE aqil_db;
+-- DROP DATABASE IF EXISTS sql8801470;
+-- CREATE DATABASE sql8801470 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE sql8801470;
 
 -- ==================================================
 -- 2️⃣ الجداول (Tables)
@@ -17,7 +17,8 @@ CREATE TABLE users (
   password VARCHAR(255) NOT NULL,
   last_ip VARCHAR(45),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  -- updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT NULL,
   deleted_at TIMESTAMP NULL DEFAULT NULL,
   is_deleted TINYINT(1) DEFAULT 0
 );
@@ -41,7 +42,8 @@ CREATE TABLE user_infos (
   profile_image VARCHAR(255),
   last_ip VARCHAR(45),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  -- updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT NULL,
   deleted_at TIMESTAMP NULL DEFAULT NULL,
   is_deleted TINYINT(1) DEFAULT 0,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -59,7 +61,8 @@ CREATE TABLE user_experiences (
   description TEXT,
   last_ip VARCHAR(45),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  -- updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT NULL,
   deleted_at TIMESTAMP NULL DEFAULT NULL,
   is_deleted TINYINT(1) DEFAULT 0,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -73,7 +76,8 @@ CREATE TABLE user_skills (
   type ENUM('Skill','Hobby') DEFAULT 'Skill',
   last_ip VARCHAR(45),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  -- updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT NULL,
   deleted_at TIMESTAMP NULL DEFAULT NULL,
   is_deleted TINYINT(1) DEFAULT 0,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -90,7 +94,8 @@ CREATE TABLE user_trainings (
   description TEXT,
   last_ip VARCHAR(45),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  -- updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT NULL,
   deleted_at TIMESTAMP NULL DEFAULT NULL,
   is_deleted TINYINT(1) DEFAULT 0,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -103,7 +108,8 @@ CREATE TABLE user_languages (
   proficiency ENUM('Basic','Intermediate','Fluent','Native') DEFAULT 'Basic',
   last_ip VARCHAR(45),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  -- updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT NULL,
   deleted_at TIMESTAMP NULL DEFAULT NULL,
   is_deleted TINYINT(1) DEFAULT 0,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -122,7 +128,8 @@ CREATE TABLE user_projects (
   is_ongoing BOOLEAN DEFAULT FALSE,
   last_ip VARCHAR(45),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  -- updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT NULL,
   deleted_at TIMESTAMP NULL DEFAULT NULL,
   is_deleted TINYINT(1) DEFAULT 0,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -138,7 +145,8 @@ CREATE TABLE user_files (
   category ENUM('Profile','Document','Project','Other') DEFAULT 'Other',
   last_ip VARCHAR(45),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  -- updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT NULL,
   deleted_at TIMESTAMP NULL DEFAULT NULL,
   is_deleted TINYINT(1) DEFAULT 0,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -170,7 +178,8 @@ CREATE TABLE user_data_entries (
   languages TEXT,
   last_ip VARCHAR(45),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  -- updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT NULL,
   deleted_at TIMESTAMP NULL DEFAULT NULL,
   is_deleted TINYINT(1) DEFAULT 0,
   created_by_name VARCHAR(255) NULL,
@@ -274,7 +283,7 @@ CREATE OR REPLACE VIEW v_user_data_entries AS
 SELECT 
     e.id,
     e.user_id,
-    COALESCE(i.full_name, e.created_by_name) AS created_by_name,
+    i.full_name AS created_by_name,
     e.full_name,
     e.email,
     e.national_id,
@@ -325,7 +334,7 @@ END //
 DELIMITER ;
 
 -- ==================================================
--- 6️⃣ Triggers (بدون إيموجي)
+-- 6️⃣ Triggers (بدون إيموجي) لاتضاف على نت
 -- ==================================================
 
 DROP TRIGGER IF EXISTS trg_before_delete_user;
@@ -346,7 +355,7 @@ END //
 DELIMITER ;
 
 -- ==================================================
--- 7️⃣ Events (حذف فقط للجداول الثانوية)
+-- 7️⃣ Events (حذف فقط للجداول الثانوية) لاتضاف على النت
 -- ==================================================
 
 SET GLOBAL event_scheduler = ON;
@@ -371,9 +380,13 @@ END //
 DELIMITER ;
 
 
+ALTER TABLE user_data_entries
+ADD COLUMN created_by_name VARCHAR(255) NULL AFTER is_deleted;
 
 
 SHOW CREATE TABLE user_infos;
 SHOW CREATE TABLE user_files;
 SHOW CREATE TABLE user_data_entries;
+
+
 

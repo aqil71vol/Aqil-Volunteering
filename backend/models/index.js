@@ -35,8 +35,8 @@ fs.readdirSync(__dirname)
 const { User, DataEntry, Info, Experience, Skill, Language, Project, Training, File } = db;
 
 // ربط DataEntry بالمستخدم
-User.hasMany(DataEntry, { foreignKey: 'userId', as: 'dataEntries', onDelete: 'CASCADE' });
-DataEntry.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+User.hasMany(DataEntry, { foreignKey: 'user_id', as: 'dataEntries', onDelete: 'CASCADE' });
+DataEntry.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
 // باقي العلاقات كما كانت
 User.hasOne(Info, { foreignKey: 'userId', as: 'infos', onDelete: 'CASCADE' });

@@ -5,7 +5,7 @@ const { DataEntry } = require('../models');
 exports.createEntry = async (req, res) => {
   try {
     const userId = req.user.id;
-    const created_by_name = req.user.email;
+    const created_by_name = req.user.email || req.body.created_by_name;
     const entryData = { ...req.body, user_id: userId, created_by_name };
     const newEntry = await DataEntry.create(entryData);
     res.status(201).json(newEntry);
@@ -19,13 +19,18 @@ exports.createEntry = async (req, res) => {
 exports.getAllEntries = async (req, res) => {
   try {
     const userId = req.user.id;
-    const entries = await DataEntry.findAll({ where: { user_id: userId } });
+    const entries = await DataEntry.findAll({ 
+      where: { user_id: userId }, // فقط السجلات الغير محذوفة
+      // where: { user_id: userId, is_deleted: false, paranoid: false }, // كل السجلات  المحذوفة
+      order: [['created_at', 'DESC']]
+    });
     res.json(entries);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Failed to fetch entries', error: err.message });
   }
 };
+
 
 // تحديث سجل
 exports.updateEntry = async (req, res) => {
